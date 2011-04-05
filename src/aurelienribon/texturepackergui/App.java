@@ -84,6 +84,8 @@ public class App implements ApplicationListener {
 	private AppEvents.PackDoneListener packDoneListener = new AppEvents.PackDoneListener() {
 		@Override
 		public void onEvent() {
+			index = 0;
+			
 			if (atlas != null)
 				atlas.dispose();
 			atlas = new TextureAtlas(Gdx.files.absolute(AppContext.outputDir).child("pack"));
