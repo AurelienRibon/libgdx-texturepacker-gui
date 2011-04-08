@@ -11,6 +11,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -31,7 +33,10 @@ public class AppContext {
 		} catch (IOException ex) {
 			JOptionPane.showMessageDialog(null, ex.getMessage());
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, ex.getMessage());
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			JOptionPane.showMessageDialog(null, ex.getMessage() + "\n\n" + sw.toString());
 		}
 	}
 
