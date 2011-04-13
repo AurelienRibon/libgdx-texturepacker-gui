@@ -410,13 +410,12 @@
             <Component class="javax.swing.JComboBox" name="opt_defaultImgFormat_cbox">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="6">
+                  <StringArray count="5">
                     <StringItem index="0" value="RGBA8888"/>
                     <StringItem index="1" value="RGBA4444"/>
                     <StringItem index="2" value="RGB888"/>
                     <StringItem index="3" value="RGB565"/>
-                    <StringItem index="4" value="LuminanceAlpha"/>
-                    <StringItem index="5" value="Alpha"/>
+                    <StringItem index="4" value="Alpha"/>
                   </StringArray>
                 </Property>
                 <Property name="opaque" type="boolean" value="false"/>
@@ -550,31 +549,42 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="opt_stripWhitespace_chk" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="opt_debug_chk" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="opt_incremental_chk" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="opt_debug_chk" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="opt_incremental_chk" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="opt_outputPOT_chk" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace pref="32" max="32767" attributes="0"/>
+                              <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <Component id="opt_allowRotations_chk" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="opt_outputPOT_chk" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="opt_duplicatePadding_chk" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="97" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="opt_stripWhitespace_chk" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="opt_allowRotations_chk" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="opt_duplicatePadding_chk" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="opt_outputPOT_chk" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="opt_incremental_chk" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="opt_debug_chk" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="jLabel14" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="opt_stripWhitespace_chk" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="opt_allowRotations_chk" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="opt_duplicatePadding_chk" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="opt_outputPOT_chk" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="opt_incremental_chk" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="opt_debug_chk" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -611,6 +621,13 @@
                 <Property name="text" type="java.lang.String" value="Allow rotations"/>
               </Properties>
             </Component>
+            <Component class="javax.swing.JLabel" name="jLabel14">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/aurelienribon/texturepackergui/gfx/lgdx-logo.png"/>
+                </Property>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
       </SubComponents>
@@ -639,7 +656,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="504" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="559" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -674,9 +691,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tool_previousPage_btn" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="tool_nextpage_btn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="tool_nextpage_btn" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="tool_previousPage_btn" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
