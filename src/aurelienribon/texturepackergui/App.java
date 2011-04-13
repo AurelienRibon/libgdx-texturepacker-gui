@@ -24,6 +24,8 @@ public class App implements ApplicationListener {
 	private List<Sprite> sprites;
 	private int index = 0;
 
+	private Texture backgroundTexture;
+
 	@Override
 	public void create() {
 		sb = new SpriteBatch();
@@ -35,6 +37,9 @@ public class App implements ApplicationListener {
 		camera.update();
 
 		sprites = new ArrayList<Sprite>();
+
+		backgroundTexture = new Texture(Gdx.files.classpath("aurelienribon/texturepackergui/gfx/transparent.png"));
+		backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 		
 		Gdx.input.setInputProcessor(inputProcessor);
 		AppEvents.addEventListener(AppEvents.PackDoneListener.class, packDoneListener);
@@ -51,6 +56,15 @@ public class App implements ApplicationListener {
 		GL10 gl = Gdx.gl10;
 		gl.glClearColor(1, 1, 1, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+
+		float w = Gdx.graphics.getWidth();
+		float h = Gdx.graphics.getHeight();
+		float tw = backgroundTexture.getWidth();
+		float th = backgroundTexture.getHeight();
+
+		sb.begin();
+		sb.draw(backgroundTexture, 0f, 0f, w, h, 0f, 0f, w/tw, h/th);
+		sb.end();
 
 		sb.begin();
 		camera.apply(gl);

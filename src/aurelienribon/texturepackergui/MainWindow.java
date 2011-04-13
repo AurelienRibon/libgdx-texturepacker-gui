@@ -69,6 +69,7 @@ public class MainWindow extends javax.swing.JFrame {
         opt_outputPOT_chk = new javax.swing.JCheckBox();
         opt_duplicatePadding_chk = new javax.swing.JCheckBox();
         opt_allowRotations_chk = new javax.swing.JCheckBox();
+        jLabel14 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         canvasPanel = new javax.swing.JPanel();
         toolPanel = new javax.swing.JPanel();
@@ -251,7 +252,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabel2.setText("Default image format:");
 
-        opt_defaultImgFormat_cbox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "RGBA8888", "RGBA4444", "RGB888", "RGB565", "LuminanceAlpha", "Alpha" }));
+        opt_defaultImgFormat_cbox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "RGBA8888", "RGBA4444", "RGB888", "RGB565", "Alpha" }));
         opt_defaultImgFormat_cbox.setOpaque(false);
 
         jLabel3.setText("Default min. filter:");
@@ -394,6 +395,8 @@ public class MainWindow extends javax.swing.JFrame {
 
         opt_allowRotations_chk.setText("Allow rotations");
 
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/texturepackergui/gfx/lgdx-logo.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -402,28 +405,35 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(opt_stripWhitespace_chk)
-                    .addComponent(opt_debug_chk)
-                    .addComponent(opt_incremental_chk)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(opt_debug_chk)
+                            .addComponent(opt_incremental_chk)
+                            .addComponent(opt_outputPOT_chk))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                        .addComponent(jLabel14))
                     .addComponent(opt_allowRotations_chk)
-                    .addComponent(opt_outputPOT_chk)
                     .addComponent(opt_duplicatePadding_chk))
-                .addContainerGap(97, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(opt_stripWhitespace_chk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(opt_allowRotations_chk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(opt_duplicatePadding_chk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(opt_outputPOT_chk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(opt_incremental_chk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(opt_debug_chk)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel14)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(opt_stripWhitespace_chk)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(opt_allowRotations_chk)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(opt_duplicatePadding_chk)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(opt_outputPOT_chk)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(opt_incremental_chk)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(opt_debug_chk)))
                 .addContainerGap())
         );
 
@@ -441,7 +451,7 @@ public class MainWindow extends javax.swing.JFrame {
         );
         canvasPanelLayout.setVerticalGroup(
             canvasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 504, Short.MAX_VALUE)
+            .addGap(0, 559, Short.MAX_VALUE)
         );
 
         jPanel1.add(canvasPanel, java.awt.BorderLayout.CENTER);
@@ -482,9 +492,9 @@ public class MainWindow extends javax.swing.JFrame {
             toolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(toolPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(toolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tool_previousPage_btn)
-                    .addComponent(tool_nextpage_btn))
+                .addGroup(toolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(tool_nextpage_btn)
+                    .addComponent(tool_previousPage_btn))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -552,6 +562,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
