@@ -1,0 +1,26 @@
+
+gfx1.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+test02 (non POT)
+  rotate: false
+  xy: 0, 0
+  size: 294, 290
+  orig: 300, 300
+  offset: 3, 6
+  index: -1
+test01
+  rotate: false
+  xy: 296, 0
+  size: 158, 245
+  orig: 256, 256
+  offset: 44, 5
+  index: -1
+test03 (multi shapes)
+  rotate: false
+  xy: 0, 292
+  size: 229, 165
+  orig: 256, 256
+  offset: 15, 40
+  index: -1
