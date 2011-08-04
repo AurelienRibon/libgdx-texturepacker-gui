@@ -1,2 +1,7 @@
 syntax: glob
-LGDX-TexturePackerGui/*
+gui/build.xml
+gui/build/*
+gui/dist/*
+gui/manifest.mf
+gui/nbproject/*
+*.zip
