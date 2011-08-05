@@ -1,12 +1,10 @@
 package aurelienribon.texturepackergui;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.imagepacker.TexturePacker.Settings;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import java.awt.BorderLayout;
-import java.awt.Canvas;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,18 +45,15 @@ public class MainWindow extends javax.swing.JFrame {
 
 		// Init the ui
 		loadSettings();
-		if (AppContext.inputDir != null) {
-			io_inputDir_field.setText(AppContext.inputDir);
-		}
-		if (AppContext.outputDir != null) {
-			io_outputDir_field.setText(AppContext.outputDir);
-			AppEvents.fireEventToListeners(AppEvents.PackDoneListener.class);
-		}
     }
 
-	public void setCanvas(Canvas canvas) {
-		canvas.setSize(renderPanel.getSize());
-		renderPanel.add(canvas);
+	public void setInputDir(String dir) {
+		io_inputDir_field.setText(dir);
+	}
+
+	public void setOutputDir(String dir) {
+		io_outputDir_field.setText(dir);
+		AppEvents.fireEventToListeners(AppEvents.PackDoneListener.class, dir);
 	}
 
     @SuppressWarnings("unchecked")
@@ -114,7 +109,7 @@ public class MainWindow extends javax.swing.JFrame {
         opt_outputPOT_chk = new javax.swing.JCheckBox();
         opt_incremental_chk = new javax.swing.JCheckBox();
         opt_debug_chk = new javax.swing.JCheckBox();
-        jPanel1 = new javax.swing.JPanel();
+        jSplitPane1 = new javax.swing.JSplitPane();
         renderPanel = new javax.swing.JPanel();
         toolsPanel = new javax.swing.JPanel();
         tool_previousPage_btn = new javax.swing.JButton();
@@ -146,7 +141,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(jLabel14)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel15)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,7 +170,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel12)
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addContainerGap(155, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -241,7 +236,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(io_pack_btn, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                        .addComponent(io_pack_btn, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(io_deletePack_btn))
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -251,11 +246,11 @@ public class MainWindow extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(io_outputDir_field, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+                                .addComponent(io_outputDir_field, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(io_setOutputDir_btn))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(io_inputDir_field, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+                                .addComponent(io_inputDir_field, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(io_setInputDir_btn)))))
                 .addContainerGap())
@@ -316,7 +311,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel13)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addComponent(opt_import_btn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(opt_export_btn)
@@ -395,39 +390,39 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                         .addComponent(opt_defaultImgFormat_cbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
                         .addComponent(opt_defaultMinFilter_cbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                         .addComponent(opt_defaultMagFilter_cbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
                         .addComponent(opt_minPageWidth_nud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                         .addComponent(opt_minPageHeight_nud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                         .addComponent(opt_maxPageWidth_nud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                         .addComponent(opt_maxPageHeight_nud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
                         .addComponent(opt_padding_nud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                         .addComponent(opt_alphaThreashold_nud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -547,7 +542,7 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(opt_incremental_chk)
                     .addComponent(opt_outputPOT_chk)
                     .addComponent(opt_debug_chk))
-                .addContainerGap(7, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -607,10 +602,13 @@ public class MainWindow extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane2, java.awt.BorderLayout.WEST);
 
-        jPanel1.setLayout(new java.awt.BorderLayout());
+        jSplitPane1.setBorder(null);
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setResizeWeight(1.0);
+        jSplitPane1.setContinuousLayout(true);
 
         renderPanel.setLayout(new java.awt.BorderLayout());
-        jPanel1.add(renderPanel, java.awt.BorderLayout.CENTER);
+        jSplitPane1.setLeftComponent(renderPanel);
 
         toolsPanel.setBackground(Theme.MAIN_BACKGROUND);
         toolsPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, Theme.SEPARATOR));
@@ -657,12 +655,12 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, toolsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel16)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
                 .addComponent(tool_previousPage_btn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tool_nextpage_btn)
                 .addContainerGap())
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
         );
 
         toolsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {tool_nextpage_btn, tool_previousPage_btn});
@@ -677,37 +675,42 @@ public class MainWindow extends javax.swing.JFrame {
                         .addComponent(tool_previousPage_btn))
                     .addComponent(jLabel16))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
         );
 
-        jPanel1.add(toolsPanel, java.awt.BorderLayout.SOUTH);
+        jSplitPane1.setRightComponent(toolsPanel);
 
-        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
 	private void io_setInputDir_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_io_setInputDir_btnActionPerformed
-		File selectedDir = UiHelper.showOpenFolderChooser(this, new File("."));
-		if (selectedDir != null) {
-			io_inputDir_field.setText(selectedDir.getPath());
-			AppContext.inputDir = selectedDir.getPath();
-		}
+		File startupDir = new File(io_inputDir_field.getText());
+		if (!startupDir.isDirectory())
+			startupDir = new File(".");
+
+		File selectedDir = UiHelper.showOpenFolderChooser(this, startupDir);
+		if (selectedDir != null)
+			setInputDir(selectedDir.getPath());
 	}//GEN-LAST:event_io_setInputDir_btnActionPerformed
 
 	private void io_setOutputDir_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_io_setOutputDir_btnActionPerformed
-		File selectedDir = UiHelper.showOpenFolderChooser(this, new File("."));
-		if (selectedDir != null) {
-			io_outputDir_field.setText(selectedDir.getPath());
-			AppContext.outputDir = selectedDir.getPath();
-			AppEvents.fireEventToListeners(AppEvents.PackDoneListener.class);
-		}
+		File startupDir = new File(io_outputDir_field.getText());
+		if (!startupDir.isDirectory())
+			startupDir = new File(".");
+
+		File selectedDir = UiHelper.showOpenFolderChooser(this, startupDir);
+		if (selectedDir != null)
+			setOutputDir(selectedDir.getPath());
 	}//GEN-LAST:event_io_setOutputDir_btnActionPerformed
 
 	private void io_pack_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_io_pack_btnActionPerformed
 		saveSettings();
+		String inputDir = io_inputDir_field.getText();
+		String outputDir = io_outputDir_field.getText();
 		try {
-			AppContext.pack();
+			AppContext.pack(inputDir, outputDir);
 		} catch (GdxRuntimeException ex) {
 			ErrorReport.reportOnUi(this, "Trying to pack the images causes problems...", ex);
 		}
@@ -715,7 +718,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void opt_export_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opt_export_btnActionPerformed
 		saveSettings();
-		File selectedFile = UiHelper.showSaveFileChooser(this, ".txt", "Text files (.txt)");
+		File selectedFile = UiHelper.showSaveFileChooser(this, ".txt", "Settings files (.txt)");
 		if (selectedFile != null) {
 			try {
 				AppContext.exportSettings(selectedFile);
@@ -726,7 +729,7 @@ public class MainWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_opt_export_btnActionPerformed
 
 	private void opt_import_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opt_import_btnActionPerformed
-		File selectedFile = UiHelper.showOpenFileChooser(this, ".txt", "Text files (.txt)");
+		File selectedFile = UiHelper.showOpenFileChooser(this, ".txt", "Settings files (.txt)");
 		if (selectedFile != null) {
 			try {
 				AppContext.importSettings(selectedFile);
@@ -746,12 +749,12 @@ public class MainWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_tool_nextpage_btnActionPerformed
 
 	private void io_deletePack_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_io_deletePack_btnActionPerformed
-		File outputDir = new File(AppContext.outputDir);
+		File outputDir = new File(io_outputDir_field.getText());
 		if (outputDir.exists()) {
 			File packFile = new File(outputDir, "pack");
 			if (packFile.exists())
 				packFile.delete();
-			AppEvents.fireEventToListeners(AppEvents.PackDoneListener.class);
+			AppEvents.fireEventToListeners(AppEvents.PackDoneListener.class, outputDir.getPath());
 		}
 	}//GEN-LAST:event_io_deletePack_btnActionPerformed
 
@@ -780,7 +783,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -791,6 +793,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JCheckBox opt_alias_chk;
     private javax.swing.JCheckBox opt_allowRotations_chk;
     private javax.swing.JSpinner opt_alphaThreashold_nud;

@@ -4,6 +4,8 @@ import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,16 +14,24 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 public class Main {
+	private static File inputDir = null;
+	private static File outputDir = null;
 	private static boolean runSilent = false;
 
     public static void main(String[] args) {
 		parseArgs(args);
 
 		if (runSilent) {
-			try {
-				AppContext.pack();
-			} catch (GdxRuntimeException ex) {
-				ErrorReport.reportOnStdErr("Trying to pack the images causes problems...", ex);
+			if (!inputDir.isDirectory()) {
+				ErrorReport.reportOnStdErr("Given input directory seems to be invalid...");
+			} else if (!outputDir.isDirectory()) {
+				ErrorReport.reportOnStdErr("Given output directory seems to be invalid...");
+			} else  {
+				try {
+					AppContext.pack(inputDir.getPath(), outputDir.getPath());
+				} catch (GdxRuntimeException ex) {
+					ErrorReport.reportOnStdErr("Trying to pack the images causes problems...", ex);
+				}
 			}
 		} else {
 			PrintStream ps = new PrintStream(AppContext.outputStream);
@@ -36,10 +46,10 @@ public class Main {
 	private static void parseArgs(String[] args) {
 		for (int i=0; i<args.length; i++) {
 			if (args[i].startsWith("--input=")) {
-				AppContext.inputDir = args[i].substring("--input=".length());
+				inputDir = new File(args[i].substring("--input=".length()));
 
 			} else if (args[i].startsWith("--output=")){
-				AppContext.outputDir = args[i].substring("--output=".length());
+				outputDir = new File(args[i].substring("--output=".length()));
 
 			} else if (args[i].startsWith("--settings=")){
 				try {
@@ -66,7 +76,7 @@ public class Main {
 
 				LwjglCanvas glCanvas = new LwjglCanvas(new App(), false);
 
-				MainWindow mw = new MainWindow(glCanvas.getCanvas());
+				final MainWindow mw = new MainWindow(glCanvas.getCanvas());
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 				mw.setSize(
 					Math.min(1100, screenSize.width - 100),
@@ -74,6 +84,13 @@ public class Main {
 				);
 				mw.setLocationRelativeTo(null);
 				mw.setVisible(true);
+
+				mw.addWindowListener(new WindowAdapter() {
+					@Override public void windowOpened(WindowEvent e) {
+						mw.setInputDir(inputDir != null ? inputDir.getPath() : "");
+						mw.setOutputDir(outputDir != null ? outputDir.getPath() : "");
+					}
+				});
 			}
 		});
 	}

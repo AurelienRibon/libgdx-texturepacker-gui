@@ -5,7 +5,7 @@ import javax.swing.event.EventListenerList;
 
 public class AppEvents {
 	public interface BaseAppEventListener extends EventListener {
-		public void onEvent();
+		public void onEvent(Object... args);
 	}
 
 	// -------------------------------------------------------------------------
@@ -22,10 +22,10 @@ public class AppEvents {
 		listenerList.add(listenerClass, listener);
 	}
 
-	public static <T extends AppEvents.BaseAppEventListener> void fireEventToListeners(Class<T> listenersClass) {
+	public static <T extends AppEvents.BaseAppEventListener> void fireEventToListeners(Class<T> listenersClass, Object... args) {
 		Object[] listeners = listenerList.getListenerList();
 		for (int i = listeners.length-2; i>=0; i-=2)
 			if (listeners[i] == listenersClass)
-				((T)listeners[i+1]).onEvent();
+				((T)listeners[i+1]).onEvent(args);
 	}
 }

@@ -20,15 +20,12 @@ import java.util.regex.Pattern;
 
 public class AppContext {
 	public static final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-	public static String inputDir;
-	public static String outputDir;
 	public static Settings settings = new Settings();
 
-	public static void pack() throws GdxRuntimeException {
+	public static void pack(String inputDir, String outputDir) throws GdxRuntimeException {
 		if (inputDir != null && outputDir != null) {
 			TexturePacker.process(settings, inputDir, outputDir);
-			AppEvents.fireEventToListeners(AppEvents.PackDoneListener.class);
+			AppEvents.fireEventToListeners(AppEvents.PackDoneListener.class, outputDir);
 		}
 	}
 
