@@ -70,14 +70,15 @@ public class App implements ApplicationListener {
 		if (reloadPackRequested) {
 			reloadPackRequested = false;
 			index = 0;
+			camera.position.set(0, 0, 0);
+			camera.update();
 
 			sprites.clear();
 			if (atlas != null)
 				atlas.dispose();
 
-			FileHandle packFile = Gdx.files.absolute(AppContext.outputDir).child("pack");
-			if (packFile.exists()) {
-				atlas = new TextureAtlas(Gdx.files.absolute(AppContext.outputDir).child("pack"));
+			if (packFile != null && packFile.exists()) {
+				atlas = new TextureAtlas(packFile);
 
 				List<Texture> textures = new ArrayList<Texture>();
 				for (AtlasRegion region : atlas.getRegions())
@@ -154,22 +155,27 @@ public class App implements ApplicationListener {
 	private boolean previousPageRequested = false;
 	private boolean nextPageRequested = false;
 	private boolean reloadPackRequested = false;
+	private FileHandle packFile = null;
 
 	private final AppEvents.PreviousPageRequestedListener previousPageRequestedListener = new AppEvents.PreviousPageRequestedListener() {
-		@Override public void onEvent() {
+		@Override public void onEvent(Object... args) {
 			previousPageRequested = true;
 		}
 	};
 
 	private final AppEvents.NextPageRequestedListener nextPageRequestedListener = new AppEvents.NextPageRequestedListener() {
-		@Override public void onEvent() {
+		@Override public void onEvent(Object... args) {
 			nextPageRequested = true;
 		}
 	};
 	
 	private final AppEvents.PackDoneListener packDoneListener = new AppEvents.PackDoneListener() {
-		@Override public void onEvent() {
+		@Override public void onEvent(Object... args) {
 			reloadPackRequested = true;
+			packFile = null;
+			FileHandle packDir = Gdx.files.absolute((String) args[0]);
+			if (packDir.exists() && packDir.isDirectory() && packDir.child("pack").exists() && !packDir.child("pack").isDirectory())
+				packFile = packDir.child("pack");
 		}
 	};
 
