@@ -40,7 +40,7 @@ public class App implements ApplicationListener {
 
 		sprites = new ArrayList<Sprite>();
 
-		backgroundTexture = new Texture(Gdx.files.classpath("aurelienribon/texturepackergui/gfx/transparent.png"));
+		backgroundTexture = new Texture(Gdx.files.classpath("aurelienribon/texturepackergui/gfx/transparent-dark.png"));
 		backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 		
 		Gdx.input.setInputProcessor(inputProcessor);
