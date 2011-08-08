@@ -59,7 +59,7 @@ public class App implements ApplicationListener {
 
 		if (previousPageRequested) {
 			previousPageRequested = false;
-			index = (index - 1) % sprites.size();
+			index = index-1 < 0 ? sprites.size() + (index-1) : index-1;
 		}
 
 		if (nextPageRequested) {

@@ -1,7 +1,7 @@
 
-gfx1.png
+input1.png
 format: RGBA8888
-filter: MipMapLinearNearest,Nearest
+filter: Nearest,Nearest
 repeat: none
 test02 (non POT)
   rotate: false
@@ -12,14 +12,14 @@ test02 (non POT)
   index: -1
 test01
   rotate: false
-  xy: 296, 0
+  xy: 314, 0
   size: 158, 245
   orig: 256, 256
   offset: 44, 5
   index: -1
 test03 (multi shapes)
   rotate: false
-  xy: 0, 292
+  xy: 0, 310
   size: 229, 165
   orig: 256, 256
   offset: 15, 40
