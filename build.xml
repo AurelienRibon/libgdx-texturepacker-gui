@@ -1,0 +1,83 @@
+<project name="libgdx-texturepacker-gui" default="all" basedir=".">
+
+	<!-- ****************************************************************** -->
+	<!-- Definitions -->
+	<!-- ****************************************************************** -->
+	
+	<!-- version -->
+	<property name="version" value="2.2" />
+
+	<!-- projects properties -->
+	<property name="prj.gui.dir" value="gui" />
+	<property name="prj.gui.filename" value="libgdx-texturepacker-gui" />
+
+	<!-- ****************************************************************** -->
+	<!-- Tasks -->
+	<!-- ****************************************************************** -->
+	
+	<!-- clean -->	
+	<target name="clean">
+		<delete includeEmptyDirs="true"><fileset dir="${prj.gui.dir}" includes="*.jar, bin/, build/, dist/"/></delete>
+	</target>
+
+	<!-- init -->
+	<target name="init" depends="clean">
+		<mkdir dir="${prj.gui.dir}/bin/" />
+	</target>
+
+	<!-- compile -->
+	<target name="compile" depends="init">
+		<javac target="1.6" source="1.6" debug="on" srcdir="${prj.gui.dir}/src/" destdir="${prj.gui.dir}/bin/">
+			<classpath>
+				<fileset file="${prj.gui.dir}/libs/*.jar" />
+			</classpath>
+		</javac>	
+	</target>
+
+	<!-- pre-package -->
+	<target name="pre-package" depends="compile">
+		<copy todir="${prj.gui.dir}/bin/aurelienribon/texturepackergui/gfx">
+			<fileset dir="${prj.gui.dir}/src/aurelienribon/texturepackergui/gfx"/>
+		</copy>
+	</target>
+	
+	<!-- package -->
+	<target name="package" depends="pre-package">
+		<pathconvert property="prj.gui.classpath" pathsep=" ">
+			<path><fileset dir="${prj.gui.dir}" includes="libs/**/*.jar" /></path>
+			<chainedmapper>
+				<flattenmapper />
+				<globmapper from="*" to="libs/*" />
+			</chainedmapper>
+		</pathconvert>
+		<jar destfile="${prj.gui.dir}/${prj.gui.filename}.jar" basedir="${prj.gui.dir}/bin">
+			<manifest>
+				<attribute name="Main-Class" value="Main"/>
+				<attribute name="Class-Path" value="${prj.gui.classpath}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- zip -->
+	<target name="zip" depends="package">
+		<zip destfile="${prj.gui.filename}-${version}.zip"><fileset dir="${prj.gui.dir}" includes="*.jar, libs/, test-me!/" /></zip>
+	</target>
+	
+	<!-- all -->
+	<target name="all" depends="zip">
+		<antcall target="clean"/>
+	</target>
+
+	<!-- run-demo -->
+	<target name="run">
+		<delete dir="temp"/>
+		<unzip src="${prj.gui.filename}-${version}.zip" dest="temp"/>
+		<exec executable="java" dir="temp">
+			<arg value="-jar"/>
+			<arg value="${prj.gui.filename}.jar"/>
+			<arg value="--input=&quot;test-me!/input&quot;"/>
+			<arg value="--output=&quot;test-me!/output&quot;"/>
+		</exec>
+		<delete dir="temp"/>
+	</target>
+</project>

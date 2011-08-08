@@ -1,5 +1,9 @@
-package aurelienribon.texturepackergui;
 
+
+import aurelienribon.texturepackergui.App;
+import aurelienribon.texturepackergui.AppContext;
+import aurelienribon.texturepackergui.ErrorReport;
+import aurelienribon.texturepackergui.MainWindow;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import java.awt.Dimension;

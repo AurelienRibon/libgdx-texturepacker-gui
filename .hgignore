@@ -1,7 +1,8 @@
 syntax: glob
-gui/build.xml
+*.zip
+
+gui/manifest.mf
+gui/nbbuild.xml
 gui/build/*
 gui/dist/*
-gui/manifest.mf
 gui/nbproject/*
-*.zip
