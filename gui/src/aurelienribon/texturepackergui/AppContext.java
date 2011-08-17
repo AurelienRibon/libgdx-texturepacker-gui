@@ -2,8 +2,8 @@ package aurelienribon.texturepackergui;
 
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.imagepacker.TexturePacker;
-import com.badlogic.gdx.imagepacker.TexturePacker.Settings;
+import com.badlogic.gdx.tools.imagepacker.TexturePacker;
+import com.badlogic.gdx.tools.imagepacker.TexturePacker.Settings;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

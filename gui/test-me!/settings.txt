@@ -1,0 +1,16 @@
+alias=false
+alphaThreshold=0
+debug=true
+defaultFilterMag=Linear
+defaultFilterMin=MipMapLinearNearest
+defaultFormat=RGBA8888
+duplicatePadding=true
+incremental=false
+maxHeight=1024
+maxWidth=1024
+minHeight=16
+minWidth=16
+padding=2
+pot=true
+rotate=false
+stripWhitespace=true

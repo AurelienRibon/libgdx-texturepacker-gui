@@ -28,8 +28,6 @@ public class Main {
 		if (runSilent) {
 			if (!inputDir.isDirectory()) {
 				ErrorReport.reportOnStdErr("Given input directory seems to be invalid...");
-			} else if (!outputDir.isDirectory()) {
-				ErrorReport.reportOnStdErr("Given output directory seems to be invalid...");
 			} else  {
 				try {
 					AppContext.pack(inputDir.getPath(), outputDir.getPath());

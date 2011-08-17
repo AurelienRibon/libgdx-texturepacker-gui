@@ -2,7 +2,7 @@ package aurelienribon.texturepackergui;
 
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.imagepacker.TexturePacker.Settings;
+import com.badlogic.gdx.tools.imagepacker.TexturePacker.Settings;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import java.awt.BorderLayout;
 import java.awt.Component;
