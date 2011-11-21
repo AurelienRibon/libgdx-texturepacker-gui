@@ -78,7 +78,7 @@ public class Project {
 	}
 
 	public void pack() throws GdxRuntimeException {
-		TexturePacker.process(settings, input, output);
+		TexturePacker.process(getSettings(), getInput(), getOutput());
 	}
 
 	private String norm(String path) {
@@ -92,9 +92,10 @@ public class Project {
 	// -------------------------------------------------------------------------
 
 	public static Project load(String filepath) throws IOException {
-		String content = FileUtils.readFileToString(new File(filepath));
+		String fullpath = new File(filepath).getCanonicalPath();
+		String content = FileUtils.readFileToString(new File(fullpath));
 		Project prj = new Project();
-		prj.setPath(FilenameUtils.getPrefix(filepath) + FilenameUtils.getPath(filepath));
+		prj.setPath(FilenameUtils.getPrefix(fullpath) + FilenameUtils.getPath(fullpath));
 		prj.setSettings(loadSettings(content));
 
 		String lines[] = content.split("\n");

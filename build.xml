@@ -17,7 +17,7 @@
 	
 	<!-- clean -->	
 	<target name="clean">
-		<delete includeEmptyDirs="true"><fileset dir="${prj.gui.dir}" includes="*.jar, bin/, build/, dist/"/></delete>
+		<delete includeEmptyDirs="true"><fileset dir="${prj.gui.dir}" includes="*.jar, bin/"/></delete>
 	</target>
 
 	<!-- init -->
