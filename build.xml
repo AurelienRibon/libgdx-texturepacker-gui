@@ -5,7 +5,7 @@
 	<!-- ****************************************************************** -->
 	
 	<!-- version -->
-	<property name="version" value="2.2" />
+	<property name="version" value="2.4" />
 
 	<!-- projects properties -->
 	<property name="prj.gui.dir" value="gui" />
@@ -66,18 +66,5 @@
 	<!-- all -->
 	<target name="all" depends="zip">
 		<antcall target="clean"/>
-	</target>
-
-	<!-- run-demo -->
-	<target name="run">
-		<delete dir="temp"/>
-		<unzip src="${prj.gui.filename}-${version}.zip" dest="temp"/>
-		<exec executable="java" dir="temp">
-			<arg value="-jar"/>
-			<arg value="${prj.gui.filename}.jar"/>
-			<arg value="--input=&quot;test-me!/input&quot;"/>
-			<arg value="--output=&quot;test-me!/output&quot;"/>
-		</exec>
-		<delete dir="temp"/>
 	</target>
 </project>

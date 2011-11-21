@@ -17,7 +17,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import java.util.ArrayList;
 import java.util.List;
 
-public class App implements ApplicationListener {
+public class RenderCanvas implements ApplicationListener {
 	private SpriteBatch sb;
 	private BitmapFont font;
 	private OrthographicCamera camera;
@@ -40,7 +40,7 @@ public class App implements ApplicationListener {
 
 		sprites = new ArrayList<Sprite>();
 
-		backgroundTexture = new Texture(Gdx.files.classpath("aurelienribon/texturepackergui/gfx/transparent-dark.png"));
+		backgroundTexture = new Texture(Gdx.files.classpath("aurelienribon/texturepackergui/gfx/transparent-light.png"));
 		backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 		
 		Gdx.input.setInputProcessor(inputProcessor);
@@ -120,7 +120,6 @@ public class App implements ApplicationListener {
 
 		sb.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 		sb.begin();
-		font.draw(sb, "Drag to pan, scroll to zoom", 5, 45);
 		if (sprites.isEmpty())
 			font.draw(sb, "No page to show yet", 5, 25);
 		else

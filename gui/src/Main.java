@@ -1,84 +1,48 @@
 
 
-import aurelienribon.texturepackergui.App;
-import aurelienribon.texturepackergui.AppContext;
-import aurelienribon.texturepackergui.ErrorReport;
+import aurelienribon.texturepackergui.RenderCanvas;
+import aurelienribon.texturepackergui.utils.ErrorReport;
 import aurelienribon.texturepackergui.MainWindow;
+import aurelienribon.texturepackergui.Project;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
+import com.badlogic.gdx.tools.imagepacker.TexturePacker.Settings;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import org.apache.commons.io.FileUtils;
 
 public class Main {
-	private static File inputDir = null;
-	private static File outputDir = null;
-	private static boolean runSilent = false;
-
     public static void main(String[] args) {
-		parseArgs(args);
+		Parameters params = new Parameters(args);
+		final Project prj = params.project != null
+			? params.project
+			: new Project(params.input, params.output, params.settings);
 
-		if (runSilent) {
-			if (!inputDir.isDirectory()) {
-				ErrorReport.reportOnStdErr("Given input directory seems to be invalid...");
+		if (params.silent) {
+			if (prj.getInput().equals("") || prj.getOutput().equals("")) {
+				ErrorReport.reportOnStdErr("Input and output directories have to be set for silent pack");
 			} else  {
 				try {
-					AppContext.pack(inputDir.getPath(), outputDir.getPath());
+					prj.pack();
 				} catch (GdxRuntimeException ex) {
-					ErrorReport.reportOnStdErr("Trying to pack the images causes problems...", ex);
+					ErrorReport.reportOnStdErr("Packing unsuccessful...", ex);
 				}
 			}
-		} else {
-			PrintStream ps = new PrintStream(AppContext.outputStream);
-			System.setOut(ps);
-			System.setErr(ps);
-			makeWindow();
-			System.out.println("libgdx-texturepacker-gui | 2011");
-			System.out.println("Welcome!\n");
+			return;
 		}
-    }
-
-	private static void parseArgs(String[] args) {
-		for (int i=0; i<args.length; i++) {
-			if (args[i].startsWith("--input=")) {
-				inputDir = new File(args[i].substring("--input=".length()));
-
-			} else if (args[i].startsWith("--output=")){
-				outputDir = new File(args[i].substring("--output=".length()));
-
-			} else if (args[i].startsWith("--settings=")){
-				try {
-					AppContext.importSettings(new File(args[i].substring("--settings=".length())));
-				} catch (FileNotFoundException ex) {
-					ErrorReport.reportOnStdErr("It seems that the settings file was not found.", ex);
-				} catch (IOException ex) {
-					ErrorReport.reportOnStdErr("Settings file caused some problems, trash it, now.", ex);
-				}
-
-			} else if (args[i].equals("--silentPack")){
-				runSilent = true;
-			}
-		}
-	}
-
-	private static void makeWindow() {
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				try {
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-				} catch (Exception ex) {}
+				try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());} catch (Exception ex) {}
 
-				LwjglCanvas glCanvas = new LwjglCanvas(new App(), false);
+				LwjglCanvas glCanvas = new LwjglCanvas(new RenderCanvas(), false);
 
-				final MainWindow mw = new MainWindow(glCanvas.getCanvas());
+				MainWindow mw = new MainWindow(glCanvas.getCanvas());
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 				mw.setSize(
 					Math.min(1100, screenSize.width - 100),
@@ -86,14 +50,47 @@ public class Main {
 				);
 				mw.setLocationRelativeTo(null);
 				mw.setVisible(true);
-
-				mw.addWindowListener(new WindowAdapter() {
-					@Override public void windowOpened(WindowEvent e) {
-						mw.setInputDir(inputDir != null ? inputDir.getPath() : "");
-						mw.setOutputDir(outputDir != null ? outputDir.getPath() : "");
-					}
-				});
+				mw.setProject(prj);
 			}
 		});
+    }
+
+	private static class Parameters {
+		public boolean silent = false;
+		public Project project = null;
+		public String input = null;
+		public String output = null;
+		public Settings settings = new Settings();
+
+		public Parameters(String[] args) {
+			for (int i=0; i<args.length; i++) {
+				if (args[i].startsWith("--project=")) {
+					try {
+						project = Project.load(args[i].substring("--project=".length()));
+					} catch (IOException ex) {
+						ErrorReport.reportOnStdErr("Can't read project file", ex);
+					}
+
+				} else if (args[i].startsWith("--input=")) {
+					input = args[i].substring("--input=".length());
+
+				} else if (args[i].startsWith("--output=")) {
+					output = args[i].substring("--output=".length());
+
+				} else if (args[i].startsWith("--silent")) {
+					silent = true;
+
+				} else if (args[i].startsWith("--settings=")){
+					try {
+						File file = new File(args[i].substring("--settings=".length()));
+						String content = FileUtils.readFileToString(file);
+						settings = Project.loadSettings(content);
+
+					} catch (IOException ex) {
+						ErrorReport.reportOnStdErr("Can't read settings file", ex);
+					}
+				}
+			}
+		}
 	}
 }
