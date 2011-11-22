@@ -2,6 +2,7 @@ package aurelienribon.texturepackergui;
 
 import aurelienribon.texturepackergui.utils.ErrorReport;
 import aurelienribon.texturepackergui.utils.UiHelper;
+import aurelienribon.utils.ui.SwingHelper;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -16,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import javax.swing.Timer;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import org.apache.commons.io.FileUtils;
 
 public class MainWindow extends javax.swing.JFrame {
@@ -32,6 +32,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         initComponents();
 		renderPanel.add(canvas, BorderLayout.CENTER);
+		SwingHelper.flattenSplitPane(jSplitPane1, Theme.MAIN_BACKGROUND);
 
 		final Timer stdOutTimer = new Timer(100, new ActionListener() {
 			@Override
@@ -57,11 +58,6 @@ public class MainWindow extends javax.swing.JFrame {
 				stdOutTimer.stop();
 			}
 		});
-
-
-		BasicSplitPaneDivider dividerContainer = (BasicSplitPaneDivider) jSplitPane1.getComponent(0);
-		dividerContainer.setBackground(Theme.MAIN_BACKGROUND);
-		dividerContainer.setBorder(null);
     }
 
 	public void setProject(Project prj) {
@@ -97,8 +93,8 @@ public class MainWindow extends javax.swing.JFrame {
         io_setOutputDir_btn = new javax.swing.JButton();
         io_outputDir_field = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
-        io_loadPrj_btn = new javax.swing.JButton();
         io_savePrj_btn = new javax.swing.JButton();
+        io_loadPrj_btn = new javax.swing.JButton();
         packlPanel = new javax.swing.JPanel();
         titlePanel3 = new aurelienribon.utils.ui.TitlePanel();
         jLabel19 = new javax.swing.JLabel();
@@ -139,7 +135,6 @@ public class MainWindow extends javax.swing.JFrame {
         opt_incremental_chk = new javax.swing.JCheckBox();
         opt_debug_chk = new javax.swing.JCheckBox();
         opt_alias_chk = new javax.swing.JCheckBox();
-        jPanel2 = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         renderPanelWrapper = new javax.swing.JPanel();
         renderPanel = new javax.swing.JPanel();
@@ -177,9 +172,9 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(titlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, titlePanelLayout.createSequentialGroup()
                         .addComponent(jLabel14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)
                         .addComponent(jLabel16))
-                    .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE))
                 .addContainerGap())
         );
         titlePanelLayout.setVerticalGroup(
@@ -246,9 +241,6 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Input directory:");
 
-        io_inputDir_field.setBackground(Theme.TEXTAREA_BACKGROUND);
-        io_inputDir_field.setForeground(Theme.TEXTAREA_FOREGROUND);
-
         io_setOutputDir_btn.setText("...");
         io_setOutputDir_btn.setMargin(new java.awt.Insets(2, 3, 2, 2));
         io_setOutputDir_btn.setOpaque(false);
@@ -258,23 +250,8 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        io_outputDir_field.setBackground(Theme.TEXTAREA_BACKGROUND);
-        io_outputDir_field.setForeground(Theme.TEXTAREA_FOREGROUND);
-
         jPanel3.setOpaque(false);
         jPanel3.setLayout(new java.awt.GridLayout(1, 0, 5, 0));
-
-        io_loadPrj_btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/texturepackergui/gfx/ic_load.png"))); // NOI18N
-        io_loadPrj_btn.setText("Load project");
-        io_loadPrj_btn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        io_loadPrj_btn.setMargin(new java.awt.Insets(2, 3, 2, 3));
-        io_loadPrj_btn.setOpaque(false);
-        io_loadPrj_btn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                io_loadPrj_btnActionPerformed(evt);
-            }
-        });
-        jPanel3.add(io_loadPrj_btn);
 
         io_savePrj_btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/texturepackergui/gfx/ic_save.png"))); // NOI18N
         io_savePrj_btn.setText("Save project");
@@ -287,6 +264,18 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
         jPanel3.add(io_savePrj_btn);
+
+        io_loadPrj_btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aurelienribon/texturepackergui/gfx/ic_load.png"))); // NOI18N
+        io_loadPrj_btn.setText("Load project");
+        io_loadPrj_btn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        io_loadPrj_btn.setMargin(new java.awt.Insets(2, 3, 2, 3));
+        io_loadPrj_btn.setOpaque(false);
+        io_loadPrj_btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                io_loadPrj_btnActionPerformed(evt);
+            }
+        });
+        jPanel3.add(io_loadPrj_btn);
 
         javax.swing.GroupLayout generalInnerPanelLayout = new javax.swing.GroupLayout(generalInnerPanel);
         generalInnerPanel.setLayout(generalInnerPanelLayout);
@@ -431,7 +420,6 @@ public class MainWindow extends javax.swing.JFrame {
         settingsPanel.add(titlePanel2, java.awt.BorderLayout.NORTH);
 
         settingsInnerPanel.setBackground(Theme.MAIN_ALT_BACKGROUND);
-        settingsInnerPanel.setLayout(new javax.swing.BoxLayout(settingsInnerPanel, javax.swing.BoxLayout.PAGE_AXIS));
 
         jPanel4.setOpaque(false);
 
@@ -563,8 +551,6 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        settingsInnerPanel.add(jPanel4);
-
         jPanel1.setOpaque(false);
         jPanel1.setLayout(new java.awt.BorderLayout());
 
@@ -663,23 +649,20 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanel1.add(jPanel9, java.awt.BorderLayout.CENTER);
 
-        settingsInnerPanel.add(jPanel1);
-
-        jPanel2.setOpaque(false);
-        jPanel2.setPreferredSize(new java.awt.Dimension(282, 999999999));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 284, Short.MAX_VALUE)
+        javax.swing.GroupLayout settingsInnerPanelLayout = new javax.swing.GroupLayout(settingsInnerPanel);
+        settingsInnerPanel.setLayout(settingsInnerPanelLayout);
+        settingsInnerPanelLayout.setHorizontalGroup(
+            settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 384, Short.MAX_VALUE)
+        settingsInnerPanelLayout.setVerticalGroup(
+            settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(settingsInnerPanelLayout.createSequentialGroup()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        settingsInnerPanel.add(jPanel2);
 
         settingsPanel.add(settingsInnerPanel, java.awt.BorderLayout.CENTER);
 
@@ -710,14 +693,12 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(packlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 730, Short.MAX_VALUE)
+                .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         getContentPane().add(configPanel, java.awt.BorderLayout.WEST);
 
-        jSplitPane1.setBorder(null);
-        jSplitPane1.setDividerSize(3);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setResizeWeight(1.0);
         jSplitPane1.setContinuousLayout(true);
@@ -730,19 +711,19 @@ public class MainWindow extends javax.swing.JFrame {
         renderPanelWrapper.setLayout(renderPanelWrapperLayout);
         renderPanelWrapperLayout.setHorizontalGroup(
             renderPanelWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 411, Short.MAX_VALUE)
+            .addGap(0, 268, Short.MAX_VALUE)
             .addGroup(renderPanelWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(renderPanelWrapperLayout.createSequentialGroup()
-                    .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
+                    .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         renderPanelWrapperLayout.setVerticalGroup(
             renderPanelWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 284, Short.MAX_VALUE)
+            .addGap(0, 173, Short.MAX_VALUE)
             .addGroup(renderPanelWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(renderPanelWrapperLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)))
+                    .addComponent(renderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)))
         );
 
         jSplitPane1.setLeftComponent(renderPanelWrapper);
@@ -790,10 +771,10 @@ public class MainWindow extends javax.swing.JFrame {
             toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, toolsPanelLayout.createSequentialGroup()
                 .addGroup(toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
                     .addGroup(toolsPanelLayout.createSequentialGroup()
                         .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 267, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 268, Short.MAX_VALUE)
                         .addComponent(tool_previousPage_btn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tool_nextpage_btn)))
@@ -811,7 +792,7 @@ public class MainWindow extends javax.swing.JFrame {
                         .addComponent(tool_nextpage_btn)
                         .addComponent(tool_previousPage_btn)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -929,7 +910,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel8;
