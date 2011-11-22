@@ -1,6 +1,8 @@
 package aurelienribon.utils.ui;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Desktop;
 import java.awt.Desktop.Action;
 import java.awt.Dimension;
@@ -13,7 +15,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.swing.JOptionPane;
+import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com
@@ -76,6 +82,25 @@ public class SwingHelper {
 			JOptionPane.showMessageDialog(parent,
 				"It seems that I can't open a website using your"
 				+ "default browser, sorry.");
+		}
+	}
+
+	public static void flattenSplitPane(JSplitPane panel, final Color dividerColor) {
+		try {
+			panel.setUI(new BasicSplitPaneUI() {
+				@Override public BasicSplitPaneDivider createDefaultDivider() {
+					BasicSplitPaneDivider div = new BasicSplitPaneDivider(this) {
+						@Override public void setBorder(Border b) {}
+					};
+					div.setBackground(dividerColor);
+					return div;
+				}
+			});
+			panel.setBackground(dividerColor);
+			panel.setBorder(null);
+
+		} catch (Exception ex) {
+			System.err.println("Something went wrong with a splitpane, but that's cool, don't worry.");
 		}
 	}
 }
