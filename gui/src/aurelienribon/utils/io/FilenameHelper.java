@@ -5,6 +5,14 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.FilenameUtils;
 
 public class FilenameHelper {
+	/**
+	 * Removes every '"' character before and after the path, if any.
+	 */
+	public static String trim(String path) {
+		while (path.startsWith("\"") && path.endsWith("\""))
+			path = path.substring(1, path.length()-1);
+		return path;
+	}
 
 	/**
 	 * Gets the relative path from one file to another.
@@ -18,6 +26,8 @@ public class FilenameHelper {
 		// Normalize the paths
 		String normalizedTargetPath = FilenameUtils.normalizeNoEndSeparator(targetPath);
 		String normalizedBasePath = FilenameUtils.normalizeNoEndSeparator(basePath);
+
+		if (basePath.equals(targetPath)) return "";
 
 		// Undo the changes to the separators made by normalization
 		if (pathSeparator.equals("/")) {

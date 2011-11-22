@@ -17,54 +17,52 @@ import org.apache.commons.io.FilenameUtils;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class Project {
-	private String path = "";
-	private String input = "";
-	private String output = "";
-	private Settings settings = new Settings();
+	private String basePath;
+	private String input;
+	private String output;
+	private Settings settings;
 
-	public Project() {
-	}
-
-	public Project(String input, String output, Settings settings) {
-		this.input = input != null ? norm(input) : "";
-		this.output = output != null ? norm(output) : "";
+	public Project(String basePath, String input, String output, Settings settings) {
+		this.basePath = basePath;
+		this.input = input;
+		this.output = output;
 		this.settings = settings;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setBasePath(String basePath) {
+		this.basePath = basePath;
 	}
 
 	public void setInput(String input) {
-		this.input = input != null ? norm(input) : "";
+		this.input = input;
 	}
 
 	public void setOutput(String output) {
-		this.output = output != null ? norm(output) : "";
+		this.output = output;
 	}
 
 	public void setSettings(Settings settings) {
 		this.settings = settings;
 	}
 
-	public String getPath() {
-		return path;
+	public String getBasePath() {
+		return basePath;
 	}
 
 	public String getInput() {
-		return FilenameUtils.concat(path, input);
+		return input;
 	}
 
 	public String getOutput() {
-		return FilenameUtils.concat(path, output);
+		return output;
 	}
 
 	public String getRelativeInput() {
-		return FilenameHelper.getRelativePath(getInput(), path);
+		return FilenameHelper.getRelativePath(input, basePath);
 	}
 
 	public String getRelativeOutput() {
-		return FilenameHelper.getRelativePath(getOutput(), path);
+		return FilenameHelper.getRelativePath(output, basePath);
 	}
 
 	public Settings getSettings() {
@@ -81,30 +79,44 @@ public class Project {
 		TexturePacker.process(getSettings(), getInput(), getOutput());
 	}
 
-	private String norm(String path) {
-		while (path.startsWith("\"") && path.endsWith("\""))
-			path = path.substring(1, path.length()-1);
-		return path;
-	}
-
 	// -------------------------------------------------------------------------
 	// Static
 	// -------------------------------------------------------------------------
 
-	public static Project load(String filepath) throws IOException {
-		String fullpath = new File(filepath).getCanonicalPath();
-		String content = FileUtils.readFileToString(new File(fullpath));
-		Project prj = new Project();
-		prj.setPath(FilenameUtils.getPrefix(fullpath) + FilenameUtils.getPath(fullpath));
-		prj.setSettings(loadSettings(content));
+	public static Project loadFromFile(String filepath) throws IOException {
+		filepath = new File(filepath).getCanonicalPath();
+		String content = FileUtils.readFileToString(new File(filepath));
+		String path = new File(filepath).getParent();
+		return loadFromString(path, content);
+	}
+
+	public static Project loadFromString(String dirpath, String content) {
+		String basePath = dirpath;
+		String input = null;
+		String output = null;
+		Settings settings = loadSettings(content);
 
 		String lines[] = content.split("\n");
 		for (String line : lines) {
-			if (line.startsWith("input=")) prj.setInput(line.substring("input=".length()));
-			if (line.startsWith("output=")) prj.setOutput(line.substring("output=".length()));
+			if (line.startsWith("input=")) input = FilenameHelper.trim(line.substring("input=".length()));
+			if (line.startsWith("output=")) output = FilenameHelper.trim(line.substring("output=".length()));
 		}
 
-		return prj;
+		if (input != null) {
+			input = FilenameUtils.concat(basePath, input);
+			input = FilenameUtils.normalizeNoEndSeparator(input);
+		} else {
+			input = "";
+		}
+
+		if (output != null) {
+			output = FilenameUtils.concat(basePath, output);
+			output = FilenameUtils.normalizeNoEndSeparator(output);
+		} else {
+			output = "";
+		}
+
+		return new Project(basePath, input, output, settings);
 	}
 	
 	public static String saveSettings(Settings settings) {
