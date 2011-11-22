@@ -5,6 +5,7 @@ import aurelienribon.texturepackergui.utils.UiHelper;
 import aurelienribon.utils.ui.SwingHelper;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.tools.imagepacker.TexturePacker.Settings;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -16,12 +17,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import org.apache.commons.io.FileUtils;
 
 public class MainWindow extends javax.swing.JFrame {
 	private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-	private final Project project = new Project();
+	private final Project project = new Project("", "", "", new Settings());
 
     public MainWindow(Component canvas) {
 		PrintStream ps = new PrintStream(outputStream);
@@ -61,7 +63,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
 	public void setProject(Project prj) {
-		project.setPath(prj.getPath());
+		project.setBasePath(prj.getBasePath());
 		project.setInput(prj.getInput());
 		project.setOutput(prj.getOutput());
 		project.setSettings(prj.getSettings());
@@ -827,6 +829,11 @@ public class MainWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_io_setOutputDir_btnActionPerformed
 
 	private void io_pack_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_io_pack_btnActionPerformed
+		if (project.getOutput().equals("") || project.getInput().equals("")) {
+			JOptionPane.showMessageDialog(this, "Please first choose the input and ouput paths");
+			return;
+		}
+
 		saveSettings();
 		try {
 			project.pack();
@@ -857,7 +864,7 @@ public class MainWindow extends javax.swing.JFrame {
 		File selectedFile = UiHelper.showOpenFileChooser(this, ".prj", "Project files (.prj)");
 		if (selectedFile != null) {
 			try {
-				setProject(Project.load(selectedFile.getPath()));
+				setProject(Project.loadFromFile(selectedFile.getPath()));
 			} catch (IOException ex) {
 				ErrorReport.reportOnUi(this, null, ex);
 			}
@@ -865,11 +872,16 @@ public class MainWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_io_loadPrj_btnActionPerformed
 
 	private void io_savePrj_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_io_savePrj_btnActionPerformed
+		if (project.getOutput().equals("") || project.getInput().equals("")) {
+			JOptionPane.showMessageDialog(this, "Please first choose the input and ouput paths");
+			return;
+		}
+
 		File selectedFile = UiHelper.showSaveFileChooser(this, ".prj", "Project files (.prj)");
 		if (selectedFile != null) {
 			try {
 				saveSettings();
-				project.setPath(selectedFile.getPath());
+				project.setBasePath(selectedFile.getParent());
 				FileUtils.writeStringToFile(selectedFile, project.save());
 			} catch (IOException ex) {
 				ErrorReport.reportOnUi(this, null, ex);
