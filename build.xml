@@ -5,7 +5,7 @@
 	<!-- ****************************************************************** -->
 	
 	<!-- version -->
-	<property name="version" value="2.4" />
+	<property name="version" value="2.4.1" />
 
 	<!-- projects properties -->
 	<property name="prj.gui.dir" value="gui" />
