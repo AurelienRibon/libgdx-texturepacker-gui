@@ -4,67 +4,28 @@
 	<!-- Definitions -->
 	<!-- ****************************************************************** -->
 	
-	<!-- version -->
-	<property name="version" value="2.4.1" />
-
-	<!-- projects properties -->
-	<property name="prj.gui.dir" value="gui" />
-	<property name="prj.gui.filename" value="libgdx-texturepacker-gui" />
+	<property name="version" value="3.0.0" />
+	<property name="dist" value="tmp" />
 
 	<!-- ****************************************************************** -->
 	<!-- Tasks -->
 	<!-- ****************************************************************** -->
 	
-	<!-- clean -->	
+	<!-- clean -->
 	<target name="clean">
-		<delete includeEmptyDirs="true"><fileset dir="${prj.gui.dir}" includes="*.jar, bin/"/></delete>
-	</target>
-
-	<!-- init -->
-	<target name="init" depends="clean">
-		<mkdir dir="${prj.gui.dir}/bin/" />
-	</target>
-
-	<!-- compile -->
-	<target name="compile" depends="init">
-		<javac target="1.6" source="1.6" debug="on" srcdir="${prj.gui.dir}/src/" destdir="${prj.gui.dir}/bin/">
-			<classpath>
-				<fileset file="${prj.gui.dir}/libs/*.jar" />
-			</classpath>
-		</javac>	
-	</target>
-
-	<!-- pre-package -->
-	<target name="pre-package" depends="compile">
-		<copy todir="${prj.gui.dir}/bin/aurelienribon/texturepackergui/gfx">
-			<fileset dir="${prj.gui.dir}/src/aurelienribon/texturepackergui/gfx"/>
-		</copy>
+		<delete dir="${dist}"/>
+		<mkdir dir="${dist}"/>
 	</target>
 	
-	<!-- package -->
-	<target name="package" depends="pre-package">
-		<pathconvert property="prj.gui.classpath" pathsep=" ">
-			<path><fileset dir="${prj.gui.dir}" includes="libs/**/*.jar" /></path>
-			<chainedmapper>
-				<flattenmapper />
-				<globmapper from="*" to="libs/*" />
-			</chainedmapper>
-		</pathconvert>
-		<jar destfile="${prj.gui.dir}/${prj.gui.filename}.jar" basedir="${prj.gui.dir}/bin">
-			<manifest>
-				<attribute name="Main-Class" value="Main"/>
-				<attribute name="Class-Path" value="${prj.gui.classpath}" />
-			</manifest>
-		</jar>
-	</target>
-
-	<!-- zip -->
-	<target name="zip" depends="package">
-		<zip destfile="${prj.gui.filename}-${version}.zip"><fileset dir="${prj.gui.dir}" includes="*.jar, libs/, test-me!/" /></zip>
+	<!-- gui -->
+	<target name="gui">
+		<ant antfile="ant.xml" dir="gui/"/>
+		<copy todir="${dist}/" file="gui/texturepacker-gui.jar"/>
+		<copy todir="${dist}/test-me!/"><fileset dir="gui/test-me!/"/></copy>
 	</target>
 	
 	<!-- all -->
-	<target name="all" depends="zip">
-		<antcall target="clean"/>
+	<target name="all" depends="clean, gui">
+		<zip destfile="texturepacker-gui-${version}.zip" basedir="${dist}"/>
 	</target>
 </project>
