@@ -1,4 +1,4 @@
-package aurelienribon.texturepackergui.utils;
+package aurelienribon.texturepackergui;
 
 import java.awt.Component;
 import java.io.File;
