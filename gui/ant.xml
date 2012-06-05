@@ -40,7 +40,7 @@
 	
 	<target name="bundle" depends="jar">
         <jar destfile="${name}-tmp.jar" filesetmanifest="skip">
-            <zipgroupfileset dir="." includes="${name}.jar, libs/**/*.jar"/>
+            <zipgroupfileset dir="." includes="${name}.jar, libs/**/*.jar" excludes="libs/**/*-sources.jar"/>
             <manifest><attribute name="Main-Class" value="${mainclass}"/></manifest>
         </jar>
 
