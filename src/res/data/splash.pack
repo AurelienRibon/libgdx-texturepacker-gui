@@ -1,0 +1,26 @@
+
+splash.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+title
+  rotate: false
+  xy: 1, 31
+  size: 199, 20
+  orig: 199, 20
+  offset: 0, 0
+  index: -1
+gdxlogo
+  rotate: false
+  xy: 1, 9
+  size: 84, 20
+  orig: 84, 20
+  offset: 0, 0
+  index: -1
+texture
+  rotate: false
+  xy: 202, 1
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
