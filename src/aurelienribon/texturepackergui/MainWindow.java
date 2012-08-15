@@ -34,7 +34,7 @@ import javax.swing.filechooser.FileFilter;
 public class MainWindow extends javax.swing.JFrame {
 	private final Canvas canvas;
 	private final ObservableList<Pack> packs = new ObservableList<Pack>();
-	private File projectFile;
+	private File lastDir = new File(".");
 
 	public MainWindow(final Canvas canvas, Component canvasCmp) {
 		try {
@@ -188,16 +188,17 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 
 	private void loadProject() {
-		String dir = projectFile != null ? projectFile.getParent() : ".";
-		JFileChooser chooser = new JFileChooser(dir);
+		JFileChooser chooser = new JFileChooser(lastDir);
 		chooser.setDialogTitle("Select your project file");
 
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			try {
-				projectFile = chooser.getSelectedFile();
-				packs.replaceBy(Pack.parse(projectFile));
+				File file = chooser.getSelectedFile();
+				lastDir = file.getParentFile();
+				packs.replaceBy(Pack.parse(file));
 				if (packs.isEmpty()) packsList.clearSelection();
 				else packsList.setSelectedIndex(0);
+				JOptionPane.showMessageDialog(this, "Save done.");
 			} catch (IOException ex) {
 				JOptionPane.showMessageDialog(this, "Project file cannot be read.");
 			}
@@ -208,14 +209,14 @@ public class MainWindow extends javax.swing.JFrame {
 		Pack pack = (Pack) packsList.getSelectedValue();
 		if (pack != null) savePack(pack);
 
-		String dir = projectFile != null ? projectFile.getParent() : ".";
-		JFileChooser chooser = new JFileChooser(dir);
+		JFileChooser chooser = new JFileChooser(lastDir);
 		chooser.setDialogTitle("Select your project file");
 
 		if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 			try {
-				projectFile = chooser.getSelectedFile();
-				Pack.export(projectFile, packs);
+				File file = chooser.getSelectedFile();
+				lastDir = file.getParentFile();
+				Pack.export(file, packs);
 			} catch (IOException ex) {
 				JOptionPane.showMessageDialog(this, "Project file cannot be written to.");
 			}
@@ -223,10 +224,7 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 
 	private void browseInput() {
-		File dir = new File(inputField.getText());
-		if (!dir.isDirectory() || inputField.getText().equals("")) dir = new File(".");
-
-		JFileChooser chooser = new JFileChooser(dir);
+		JFileChooser chooser = new JFileChooser(lastDir);
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setFileFilter(new FileFilter() {
 			@Override public boolean accept(File f) {return f.isDirectory();}
@@ -234,15 +232,14 @@ public class MainWindow extends javax.swing.JFrame {
 		});
 
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-			inputField.setText(chooser.getSelectedFile().getPath());
+			File file = chooser.getSelectedFile();
+			lastDir = file;
+			inputField.setText(file.getPath());
 		}
 	}
 
 	private void browseOutput() {
-		File dir = new File(outputField.getText());
-		if (!dir.isDirectory() || outputField.getText().equals("")) dir = new File(".");
-
-		JFileChooser chooser = new JFileChooser(dir);
+		JFileChooser chooser = new JFileChooser(lastDir);
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setFileFilter(new FileFilter() {
 			@Override public boolean accept(File f) {return f.isDirectory();}
@@ -250,7 +247,9 @@ public class MainWindow extends javax.swing.JFrame {
 		});
 
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-			outputField.setText(chooser.getSelectedFile().getPath());
+			File file = chooser.getSelectedFile();
+			lastDir = file;
+			outputField.setText(file.getPath());
 		}
 	}
 
