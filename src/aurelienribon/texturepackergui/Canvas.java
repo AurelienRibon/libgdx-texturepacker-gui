@@ -1,6 +1,11 @@
 package aurelienribon.texturepackergui;
 
+import aurelienribon.accessors.SpriteAccessor;
 import aurelienribon.texturepackergui.Label.Anchor;
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenManager;
+import aurelienribon.tweenengine.equations.Back;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -47,6 +52,12 @@ public class Canvas extends ApplicationAdapter {
 	private boolean packReloadRequested = false;
 	private FileHandle packFile = null;
 
+	private Sprite splashBack;
+	private Sprite splashGdxLogo;
+	private Sprite splashTexture;
+	private Sprite splashTitle;
+	private final TweenManager tweenManager = new TweenManager();
+
 	public static interface Callback {
 		public void atlasError();
 	}
@@ -55,11 +66,16 @@ public class Canvas extends ApplicationAdapter {
 	public void create() {
 		Assets.loadAll();
 		Texture.setEnforcePotImages(false);
+		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
+
+		// General
 
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 		drawer = new ShapeRenderer();
+
+		//Labels
 
 		infoLabel = new Sprite(Assets.getWhiteTex());
 		infoLabel.setPosition(0, 0);
@@ -86,18 +102,61 @@ public class Canvas extends ApplicationAdapter {
 		lblNextPage.show();
 		lblPreviousPage.show();
 
+		// Background
+
 		bgTex = Assets.getTransparentLightTex();
 		bgTex.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+
+		// Input
 
 		panZoomInputProcessor = new PanZoomInputProcessor(this);
 		inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor(panZoomInputProcessor);
 		inputMultiplexer.addProcessor(buttonsInputProcessor);
 		Gdx.input.setInputProcessor(inputMultiplexer);
+
+		// Splash screen
+
+		splashBack = new Sprite(Assets.getWhiteTex());
+		splashGdxLogo = Assets.getSplashAtlas().createSprite("gdxlogo");
+		splashTexture = Assets.getSplashAtlas().createSprite("texture");
+		splashTitle = Assets.getSplashAtlas().createSprite("title");
+
+		float w = Gdx.graphics.getWidth();
+		float h = Gdx.graphics.getHeight();
+
+		splashBack.setSize(w, 100);
+		splashBack.setOrigin(splashBack.getWidth()/2, splashBack.getHeight()/2);
+		splashBack.setColor(42/255f, 59/255f, 87/255f, 1);
+
+		Timeline.createSequence()
+			.push(Tween.set(splashBack, SpriteAccessor.CPOS_XY).target(w/2, h/2))
+			.push(Tween.set(splashBack, SpriteAccessor.SCALE_XY).target(1, 0))
+			.push(Tween.set(splashTexture, SpriteAccessor.CPOS_XY).target(-splashTexture.getWidth(), h/2))
+			.push(Tween.set(splashGdxLogo, SpriteAccessor.CPOS_XY).target(w+splashGdxLogo.getWidth(), h/2+15))
+			.push(Tween.set(splashTitle, SpriteAccessor.CPOS_XY).target(w+splashTitle.getWidth(), h/2-15))
+			.pushPause(1.5f)
+			.push(Tween.to(splashBack, SpriteAccessor.SCALE_XY, 1).target(1, 1).ease(Back.OUT))
+			.push(Tween.to(splashTexture, SpriteAccessor.CPOS_XY, 0.6f).target(w/2-80, h/2))
+			.pushPause(-0.4f)
+			.push(Tween.to(splashGdxLogo, SpriteAccessor.CPOS_XY, 0.6f).target(w/2, h/2+15))
+			.pushPause(-0.4f)
+			.push(Tween.to(splashTitle, SpriteAccessor.CPOS_XY, 0.6f).target(w/2+58, h/2-15))
+			.pushPause(0.6f)
+			.beginParallel()
+				.push(Tween.to(splashTexture, SpriteAccessor.OPACITY, 0.6f).target(0))
+				.push(Tween.to(splashGdxLogo, SpriteAccessor.OPACITY, 0.6f).target(0))
+				.push(Tween.to(splashTitle, SpriteAccessor.OPACITY, 0.6f).target(0))
+			.end()
+			.pushPause(-0.4f)
+			.push(Tween.to(splashBack, SpriteAccessor.SCALE_XY, 1).target(1, 0).ease(Back.IN))
+			.start(tweenManager);
 	}
 
 	@Override
 	public void render() {
+		tweenManager.update(Gdx.graphics.getDeltaTime());
+
 		if (previousPageRequested) {
 			previousPageRequested = false;
 			index = index-1 < 0 ? sprites.size()-1 : index-1;
@@ -182,6 +241,10 @@ public class Canvas extends ApplicationAdapter {
 		else font.draw(batch, "Page " + (index + 1) + " / " + sprites.size(), 10, 65);
 		font.draw(batch, String.format(Locale.US, "Zoom: %.0f %%", 100f / camera.zoom), 10, 45);
 		font.draw(batch, "Fps: " + Gdx.graphics.getFramesPerSecond(), 10, 25);
+		splashBack.draw(batch);
+		splashGdxLogo.draw(batch);
+		splashTexture.draw(batch);
+		splashTitle.draw(batch);
 		batch.end();
 	}
 
