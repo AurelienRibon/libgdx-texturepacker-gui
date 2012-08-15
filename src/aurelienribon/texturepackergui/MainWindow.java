@@ -198,7 +198,6 @@ public class MainWindow extends javax.swing.JFrame {
 				packs.replaceBy(Pack.parse(file));
 				if (packs.isEmpty()) packsList.clearSelection();
 				else packsList.setSelectedIndex(0);
-				JOptionPane.showMessageDialog(this, "Save done.");
 			} catch (IOException ex) {
 				JOptionPane.showMessageDialog(this, "Project file cannot be read.");
 			}
@@ -217,6 +216,7 @@ public class MainWindow extends javax.swing.JFrame {
 				File file = chooser.getSelectedFile();
 				lastDir = file.getParentFile();
 				Pack.export(file, packs);
+				JOptionPane.showMessageDialog(this, "Save done.");
 			} catch (IOException ex) {
 				JOptionPane.showMessageDialog(this, "Project file cannot be written to.");
 			}

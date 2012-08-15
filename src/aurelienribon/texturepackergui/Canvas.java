@@ -127,7 +127,7 @@ public class Canvas extends ApplicationAdapter {
 
 		splashBack.setSize(w, 100);
 		splashBack.setOrigin(splashBack.getWidth()/2, splashBack.getHeight()/2);
-		splashBack.setColor(42/255f, 59/255f, 87/255f, 1);
+		splashBack.setColor(42/255f, 59/255f, 87/255f, 0.8f);
 
 		Timeline.createSequence()
 			.push(Tween.set(splashBack, SpriteAccessor.CPOS_XY).target(w/2, h/2))
