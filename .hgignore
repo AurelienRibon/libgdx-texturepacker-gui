@@ -1,11 +1,11 @@
 syntax: glob
 *.zip
+*.jar
 
 tmp/*
 
-gui/manifest.mf
-gui/nbbuild.xml
-gui/build/*
-gui/dist/*
-gui/nbproject/*
-gui/*.jar
+manifest.mf
+nbbuild.xml
+build/*
+dist/*
+nbproject/*

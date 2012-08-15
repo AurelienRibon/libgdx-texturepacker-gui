@@ -1,0 +1,140 @@
+/*******************************************************************************
+ * General
+ ******************************************************************************/
+
+.rootPanel {
+	-ar-fill: texture(url("/res/gfx/bg.png"));
+}
+
+javax-swing-JScrollPane {
+	-swing-border: null;
+}
+
+javax-swing-JButton {
+	-swing-opaque: false;
+	-swing-horizontalalignment: left;
+	-swing-margin: 2 5;
+}
+
+javax-swing-JToolBar javax-swing-JButton {
+	-swing-horizontalalignment: left;
+	-swing-margin: 2 1;
+}
+
+javax-swing-JToolBar,
+javax-swing-JButton,
+javax-swing-JCheckBox,
+javax-swing-JSlider{
+	-swing-opaque: false;
+}
+
+/*******************************************************************************
+ * Groups
+ ******************************************************************************/
+
+.titledPanel {
+	-swing-background: #FFF;
+	-swing-border: arui-groupborder(noarg);
+	-ar-border-stroke: null;
+	-ar-border-thickness: 0;
+	-ar-border-header-stroke: null;
+	-ar-border-header-thickness: 0;
+	-ar-border-header-fill: lineargradient(0, 0, 0, 1, 0, #4D6082, 1, #3D5277);
+	-ar-border-margin: 3 6;
+	-ar-border-foreground: #FFF;
+	-ar-border-font: SquareFont plain 14;
+}
+
+#projectPanel {
+	-ar-border-title: "Project Configuration";
+}
+
+#settingsPanel {
+	-ar-border-title: "Selected Pack Settings";
+}
+
+#renderPanel {
+	-ar-border-title: "Selected Pack View";
+}
+
+/*******************************************************************************
+ * Headers
+ ******************************************************************************/
+
+.headerPanel {
+	-swing-background: #BBC8D8;
+}
+
+.headerPanel javax-swing-JLabel {
+	-swing-font-size: 10;
+	-swing-border: emptyborder(2, 5, 2, 5);
+	-swing-foreground: #3D5277;
+	-swing-verticalalignment: top;
+}
+
+.headerPanel javax-swing-JButton {
+	-swing-font-size: 10;
+	-swing-foreground: #3D5277;
+}
+
+.headerPanel javax-swing-JButton:disabled {
+	-swing-foreground: #888;
+}
+
+/*******************************************************************************
+ * Config panels
+ ******************************************************************************/
+
+.configPanel aurelienribon-ui-components-PaintedPanel {
+	-swing-opaque: false;
+	-ar-fill: #3FFF;
+}
+
+.configPanel aurelienribon-ui-components-PaintedPanel > javax-swing-JLabel,
+.configPanel aurelienribon-ui-components-PaintedPanel > javax-swing-JCheckBox {
+	-swing-foreground: #FFF;
+}
+
+.configPanel .bigLabel {
+	-swing-foreground: #FFF;
+	-swing-horizontalalignment: center;
+}
+
+/*******************************************************************************
+ * Misc
+ ******************************************************************************/
+
+.centerText {
+	-swing-horizontalalignment: center;
+}
+
+.bold {
+	-swing-font-style: bold;
+}
+
+.listPanel {
+	-swing-border: lineborder(#4D6082);
+}
+
+.versionLabel {
+	-swing-background: #FFF;
+	-swing-foreground: #000;
+	-swing-font-size: 10;
+	-swing-opaque: true;
+	-swing-border: emptyborder(1, 5, 1, 5);
+}
+.versionLabel:error {-swing-foreground: #800;}
+.versionLabel:newVersion {-swing-foreground: #080;}
+
+.darklink {
+	-swing-foreground: #228;
+}
+
+.darklink:hover {
+	-swing-foreground: #003;
+}
+
+.comment {
+	-swing-foreground: #555;
+	-swing-font-size: 9;
+}
