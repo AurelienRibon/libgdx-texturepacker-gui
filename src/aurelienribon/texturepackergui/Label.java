@@ -137,7 +137,9 @@ public class Label {
 		float sh = Gdx.graphics.getHeight();
 		float x = isAnchorLeft() ? offsetX : sw-w-offsetX;
 		float bgX = isAnchorLeft() ? x - w/10 : x;
-		float textH = font.getBounds(text).height;
+		//TODO double check
+//		float textH = font.getBounds(text).height;
+		float textH = font.getLineHeight();
 
 		bg.setPosition(bgX, sh - y);
 		bg.draw(batch);

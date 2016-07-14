@@ -2,18 +2,15 @@ package aurelienribon.texturepackergui;
 
 import aurelienribon.ui.components.PaintedPanel;
 import aurelienribon.ui.css.Style;
-import aurelienribon.utils.Res;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.tools.imagepacker.TexturePacker2;
+import org.apache.commons.io.IOUtils;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.List;
-import javax.swing.Timer;
-import org.apache.commons.io.IOUtils;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
@@ -28,7 +25,9 @@ public class PackDialog extends javax.swing.JDialog {
 		closeBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {dispose();}});
 
 		Style.registerCssClasses(getContentPane(), ".rootPanel", ".configPanel");
-		Style.apply(getContentPane(), new Style(Res.getUrl("css/style.css")));
+		//TODO double check
+//		Style.apply(getContentPane(), new Style(Res.getUrl("css/style.css")));
+		Style.apply(getContentPane(), new Style(Gdx.files.internal("css/style.css").readString()));
     }
 
 	public void launchPack(final Pack pack) {

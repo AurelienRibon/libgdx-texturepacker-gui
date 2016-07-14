@@ -1,13 +1,12 @@
 package aurelienribon.utils;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import javax.swing.JLabel;
-import javax.swing.Timer;
 
 /**
  * A special label used to display the current version of the project. The
@@ -53,7 +52,7 @@ public class VersionLabel extends JLabel {
 	 */
 	public void check() {
 		setText("v" + version + " (checking for updates)");
-		setIcon(Res.getImage("gfx/ic_loading.gif"));
+		setIcon(new ImageIcon(ImageUtil.loadImage("gfx/ic_loading.gif")));
 		if (checkUrl == null) return;
 
 		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -75,16 +74,16 @@ public class VersionLabel extends JLabel {
 
 				if (idx == 0) {
 					setText("v" + version + " (latest version)");
-					setIcon(Res.getImage("gfx/ic_ok.png"));
+					setIcon(new ImageIcon(ImageUtil.loadImage("gfx/ic_ok.png")));
 					firePropertyChange("latest", false, true);
 				} else if (idx > 0) {
 					setText("v" + version + " (new version available! v" + versions.get(0) + ")");
-					setIcon(Res.getImage("gfx/ic_warning.png"));
+					setIcon(new ImageIcon(ImageUtil.loadImage("gfx/ic_warning.png")));
 					SwingUtils.addBrowseBehavior(VersionLabel.this, gotoUrl);
 					firePropertyChange("newVersion", false, true);
 				} else {
 					setText("v" + version + " (update check error)");
-					setIcon(Res.getImage("gfx/ic_error.png"));
+					setIcon(new ImageIcon(ImageUtil.loadImage("gfx/ic_error.png")));
 					firePropertyChange("error", false, true);
 				}
 			}
@@ -92,7 +91,7 @@ public class VersionLabel extends JLabel {
 			@Override
 			public void onError(IOException ex) {
 				setText("v" + version + " (connection error)");
-				setIcon(Res.getImage("gfx/ic_error.png"));
+				setIcon(new ImageIcon(ImageUtil.loadImage("gfx/ic_error.png")));
 				firePropertyChange("error", false, true);
 			}
 		};

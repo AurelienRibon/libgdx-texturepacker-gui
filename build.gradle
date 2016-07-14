@@ -1,0 +1,28 @@
+group 'aurelienribon'
+version '4.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.7
+sourceSets.main.java.srcDirs = [ "src/" ]
+
+project.ext.mainClassName = "aurelienribon.texturepackergui.Main"
+project.ext.assetsDir = new File("./res");
+
+ext {
+    appName = "libgdx-texture-packer"
+    gdxVersion = '0.9.9'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    compile fileTree(dir: './libs', include: '*.jar')
+}

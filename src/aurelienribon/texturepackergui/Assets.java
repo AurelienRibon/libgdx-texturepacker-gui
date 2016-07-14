@@ -12,15 +12,15 @@ public class Assets extends AssetManager {
 
 	public static void loadAll() {
 		manager = new AssetManager();
-		manager.load("res/data/transparent-light.png", Texture.class);
-		manager.load("res/data/transparent-dark.png", Texture.class);
-		manager.load("res/data/white.png", Texture.class);
-		manager.load("res/data/splash.pack", TextureAtlas.class);
+		manager.load("data/transparent-light.png", Texture.class);
+		manager.load("data/transparent-dark.png", Texture.class);
+		manager.load("data/white.png", Texture.class);
+		manager.load("data/splash.pack", TextureAtlas.class);
 		while (!manager.update()) {}
 	}
 
-	public static Texture getTransparentLightTex() {return manager.get("res/data/transparent-light.png", Texture.class);}
-	public static Texture getTransparentDarkTex() {return manager.get("res/data/transparent-dark.png", Texture.class);}
-	public static Texture getWhiteTex() {return manager.get("res/data/white.png", Texture.class);}
-	public static TextureAtlas getSplashAtlas() {return manager.get("res/data/splash.pack", TextureAtlas.class);}
+	public static Texture getTransparentLightTex() {return manager.get("data/transparent-light.png", Texture.class);}
+	public static Texture getTransparentDarkTex() {return manager.get("data/transparent-dark.png", Texture.class);}
+	public static Texture getWhiteTex() {return manager.get("data/white.png", Texture.class);}
+	public static TextureAtlas getSplashAtlas() {return manager.get("data/splash.pack", TextureAtlas.class);}
 }

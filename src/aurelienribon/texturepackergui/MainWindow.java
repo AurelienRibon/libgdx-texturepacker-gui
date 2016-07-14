@@ -4,32 +4,25 @@ import aurelienribon.ui.components.ArStyle;
 import aurelienribon.ui.components.PaintedPanel;
 import aurelienribon.ui.css.Style;
 import aurelienribon.ui.css.swing.SwingStyle;
-import aurelienribon.utils.Res;
 import aurelienribon.utils.notifications.AutoListModel;
 import aurelienribon.utils.notifications.ObservableList;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.tools.imagepacker.TexturePacker2.Settings;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.ListCellRenderer;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.filechooser.FileFilter;
+
+import static aurelienribon.utils.ImageUtil.loadImage;
 
 public class MainWindow extends javax.swing.JFrame {
 	private final Canvas canvas;
@@ -38,7 +31,8 @@ public class MainWindow extends javax.swing.JFrame {
 
 	public MainWindow(final Canvas canvas, Component canvasCmp) {
 		try {
-			Font font1 = Font.createFont(Font.TRUETYPE_FONT, Res.getStream("fonts/SquareFont.ttf"));
+//			Font font1 = Font.createFont(Font.TRUETYPE_FONT, Res.getStream("fonts/SquareFont.ttf"));
+			Font font1 = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/SquareFont.ttf"));
 			GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font1);
 		} catch (FontFormatException ex) {
 		} catch (IOException ex) {
@@ -86,7 +80,9 @@ public class MainWindow extends javax.swing.JFrame {
 		Style.registerCssClasses(jScrollPane1, ".listPanel");
 		Style.registerCssClasses(commentLabel, ".comment");
 		Style.registerCssClasses(versionLabel, ".versionLabel");
-		Style.apply(getContentPane(), new Style(Res.getUrl("css/style.css")));
+		//TODO double check
+//		Style.apply(getContentPane(), new Style(Res.getUrl("css/style.css")));
+		Style.apply(getContentPane(), new Style(Gdx.files.internal("css/style.css").readString()));
 
 		versionLabel.initAndCheck("3.2.0", null,
 			"http://www.aurelienribon.com/projects/libgdx-texturepacker-gui/versions.txt",
@@ -456,32 +452,35 @@ public class MainWindow extends javax.swing.JFrame {
         jToolBar1.setRollover(true);
         jToolBar1.setOpaque(false);
 
-        newPackBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_add.png"))); // NOI18N
+		//TODO double check
+//        newPackBtn.setIcon(new javax.swing.ImageIcon(("/res/gfx/ic_add.png"))); // NOI18N
+        newPackBtn.setIcon(new ImageIcon(loadImage("gfx/ic_add.png"))); // NOI18N
+
         newPackBtn.setText("New pack");
         newPackBtn.setToolTipText("Add a new pack to the list");
         newPackBtn.setFocusable(false);
         newPackBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(newPackBtn);
 
-        renamePackBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_edit.png"))); // NOI18N
+        renamePackBtn.setIcon(new ImageIcon(loadImage("gfx/ic_edit.png"))); // NOI18N
         renamePackBtn.setToolTipText("Rename the selected pack");
         renamePackBtn.setFocusable(false);
         jToolBar1.add(renamePackBtn);
 
-        deletePackBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_delete.png"))); // NOI18N
+        deletePackBtn.setIcon(new ImageIcon(loadImage("gfx/ic_delete.png"))); // NOI18N
         deletePackBtn.setToolTipText("Delete the selected pack");
         deletePackBtn.setFocusable(false);
         deletePackBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(deletePackBtn);
 
-        moveUpPackBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_up.png"))); // NOI18N
+        moveUpPackBtn.setIcon(new ImageIcon(loadImage("gfx/ic_up.png"))); // NOI18N
         moveUpPackBtn.setToolTipText("Move the selected pack up in the list");
         moveUpPackBtn.setFocusable(false);
         moveUpPackBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         moveUpPackBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(moveUpPackBtn);
 
-        moveDownPackBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_down.png"))); // NOI18N
+        moveDownPackBtn.setIcon(new ImageIcon(loadImage("gfx/ic_down.png"))); // NOI18N
         moveDownPackBtn.setToolTipText("Move the selected pack down in the list");
         moveDownPackBtn.setFocusable(false);
         moveDownPackBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -493,7 +492,7 @@ public class MainWindow extends javax.swing.JFrame {
         jToolBar2.setFloatable(false);
         jToolBar2.setRollover(true);
 
-        openProjectBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_open.png"))); // NOI18N
+        openProjectBtn.setIcon(new ImageIcon(loadImage("gfx/ic_open.png"))); // NOI18N
         openProjectBtn.setText("Open project");
         openProjectBtn.setToolTipText("");
         openProjectBtn.setFocusable(false);
@@ -501,7 +500,7 @@ public class MainWindow extends javax.swing.JFrame {
         openProjectBtn.setMargin(new java.awt.Insets(2, 3, 2, 3));
         jToolBar2.add(openProjectBtn);
 
-        saveProjectBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_save.png"))); // NOI18N
+        saveProjectBtn.setIcon(new ImageIcon(loadImage("gfx/ic_save.png"))); // NOI18N
         saveProjectBtn.setText("Save project");
         saveProjectBtn.setFocusable(false);
         saveProjectBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -514,7 +513,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanel2.setOpaque(false);
 
-        packAllBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_pack.png"))); // NOI18N
+        packAllBtn.setIcon(new ImageIcon(loadImage("gfx/ic_pack.png"))); // NOI18N
         packAllBtn.setText("Pack'em all");
         packAllBtn.setMargin(new java.awt.Insets(2, 3, 2, 3));
 
@@ -582,7 +581,7 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(filenameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        packSelectedBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_pack.png"))); // NOI18N
+        packSelectedBtn.setIcon(new ImageIcon(loadImage("gfx/ic_pack.png"))); // NOI18N
         packSelectedBtn.setText("Pack selected");
         packSelectedBtn.setMargin(new java.awt.Insets(2, 3, 2, 3));
 
@@ -644,7 +643,7 @@ public class MainWindow extends javax.swing.JFrame {
         jToolBar4.setFloatable(false);
         jToolBar4.setRollover(true);
 
-        copySettingsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/gfx/ic_copy.png"))); // NOI18N
+        copySettingsBtn.setIcon(new ImageIcon(loadImage("gfx/ic_copy.png"))); // NOI18N
         copySettingsBtn.setText("Copy settings to all packs");
         copySettingsBtn.setFocusable(false);
         copySettingsBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
