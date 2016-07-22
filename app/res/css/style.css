@@ -2,11 +2,9 @@
  * General
  ******************************************************************************/
 
-/*
 .rootPanel {
 	-ar-fill: texture(url("gfx/bg.png"));
 }
-*/
 
 javax-swing-JScrollPane {
 	-swing-border: null;
