@@ -31,18 +31,17 @@ public class MainWindow extends javax.swing.JFrame {
 
 	public MainWindow(final Canvas canvas, Component canvasCmp) {
 		try {
-//			Font font1 = Font.createFont(Font.TRUETYPE_FONT, Res.getStream("fonts/SquareFont.ttf"));
 			Font font1 = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/SquareFont.ttf"));
 			GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font1);
-		} catch (FontFormatException ex) {
-		} catch (IOException ex) {
+		} catch (FontFormatException | IOException ex) {
+			throw new RuntimeException("Cannot initialize font", ex);
 		}
 
 		this.canvas = canvas;
 
 		canvas.setCallback(new Canvas.Callback() {
 			@Override public void atlasError() {
-				JOptionPane.showMessageDialog(MainWindow.this, "Impossible to create the atlas in libgdx canvas, sorry.");
+				JOptionPane.showMessageDialog(MainWindow.this, "Impossible to create the atlas in LibGDX canvas, sorry.");
 			}
 		});
 
@@ -80,10 +79,9 @@ public class MainWindow extends javax.swing.JFrame {
 		Style.registerCssClasses(jScrollPane1, ".listPanel");
 		Style.registerCssClasses(commentLabel, ".comment");
 		Style.registerCssClasses(versionLabel, ".versionLabel");
-		//TODO double check
-//		Style.apply(getContentPane(), new Style(Res.getUrl("css/style.css")));
 		Style.apply(getContentPane(), new Style(Gdx.files.internal("css/style.css").readString()));
 
+		//TODO rework version checking logic
 		versionLabel.initAndCheck("3.2.0", null,
 			"http://www.aurelienribon.com/projects/libgdx-texturepacker-gui/versions.txt",
 			"http://code.google.com/p/libgdx-texturepacker-gui/");
