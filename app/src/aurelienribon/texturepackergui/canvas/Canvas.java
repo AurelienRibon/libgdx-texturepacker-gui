@@ -1,7 +1,6 @@
 package aurelienribon.texturepackergui.canvas;
 
 import aurelienribon.accessors.SpriteAccessor;
-import aurelienribon.texturepackergui.PanZoomInputProcessor;
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;

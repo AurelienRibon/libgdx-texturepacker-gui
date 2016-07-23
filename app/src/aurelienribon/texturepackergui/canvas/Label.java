@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class Label {
+class Label {
 	static {
 		Tween.registerAccessor(Label.class, new Accessor());
 	}
