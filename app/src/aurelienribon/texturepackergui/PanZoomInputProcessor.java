@@ -1,5 +1,6 @@
 package aurelienribon.texturepackergui;
 
+import aurelienribon.texturepackergui.canvas.Canvas;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 

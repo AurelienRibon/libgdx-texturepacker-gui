@@ -1,5 +1,6 @@
 package aurelienribon.texturepackergui;
 
+import aurelienribon.texturepackergui.canvas.Canvas;
 import aurelienribon.ui.components.ArStyle;
 import aurelienribon.ui.components.PaintedPanel;
 import aurelienribon.ui.css.Style;
@@ -19,12 +20,14 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
 import static aurelienribon.utils.ImageUtil.loadImage;
 
-public class MainWindow extends javax.swing.JFrame {
+public class MainWindow extends JFrame {
 	private final Canvas canvas;
 	private final ObservableList<Pack> packs = new ObservableList<Pack>();
 	private File lastDir = new File(".");
@@ -42,6 +45,14 @@ public class MainWindow extends javax.swing.JFrame {
 		canvas.setCallback(new Canvas.Callback() {
 			@Override public void atlasError() {
 				JOptionPane.showMessageDialog(MainWindow.this, "Impossible to create the atlas in LibGDX canvas, sorry.");
+			}
+		});
+
+		// Will finish up application properly on close
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				System.exit(0);
 			}
 		});
 
@@ -86,6 +97,12 @@ public class MainWindow extends javax.swing.JFrame {
 			"http://www.aurelienribon.com/projects/libgdx-texturepacker-gui/versions.txt",
 			"http://code.google.com/p/libgdx-texturepacker-gui/");
     }
+
+//	@Override
+//	public void dispose() {
+//		canvas.dispose();
+//		super.dispose();
+//	}
 
 	public void load(File file) throws IOException {
 		packs.replaceBy(Pack.parse(file));

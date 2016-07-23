@@ -1,7 +1,7 @@
-package aurelienribon.texturepackergui;
+package aurelienribon.texturepackergui.canvas;
 
 import aurelienribon.accessors.SpriteAccessor;
-import aurelienribon.texturepackergui.Label.Anchor;
+import aurelienribon.texturepackergui.PanZoomInputProcessor;
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class Canvas extends ApplicationAdapter {
+	private static Canvas instance;
+
 	private final List<Sprite> sprites = new ArrayList<Sprite>();
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
@@ -35,6 +37,7 @@ public class Canvas extends ApplicationAdapter {
 	private InputMultiplexer inputMultiplexer;
 	private PanZoomInputProcessor panZoomInputProcessor;
 	private Callback callback;
+	private Assets assets;
 
 	private Sprite infoLabel;
 	private Label lblNextPage;
@@ -54,13 +57,21 @@ public class Canvas extends ApplicationAdapter {
 	private Sprite splashTitle;
 	private final TweenManager tweenManager = new TweenManager();
 
-	public static interface Callback {
-		public void atlasError();
+	/** Singleton accessor */
+	public static Canvas inst() {
+		if (instance == null) {
+			throw new IllegalStateException("Canvas is not initialized yet");
+		}
+		return instance;
 	}
 
 	@Override
 	public void create() {
-		Assets.loadAll();
+		instance = this;
+
+		assets = new Assets();
+		assets.loadAll();
+
 //		Texture.setEnforcePotImages(false);
 		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
 
@@ -73,15 +84,15 @@ public class Canvas extends ApplicationAdapter {
 
 		//Labels
 
-		infoLabel = new Sprite(Assets.getWhiteTex());
+		infoLabel = new Sprite(assets.getWhiteTex());
 		infoLabel.setPosition(0, 0);
 		infoLabel.setSize(140, 80);
 		infoLabel.setColor(new Color(0x2A/255f, 0x3B/255f, 0x56/255f, 180/255f));
 
 		int lblH = 25;
 		Color lblC = new Color(0x2A/255f, 0x6B/255f, 0x56/255f, 180/255f);
-		lblNextPage = new Label(10+lblH, 120, lblH, "Next page", font, lblC, Anchor.TOP_RIGHT);
-		lblPreviousPage = new Label(15+lblH*2, 120, lblH, "Previous page", font, lblC, Anchor.TOP_RIGHT);
+		lblNextPage = new Label(10+lblH, 120, lblH, "Next page", font, lblC, Label.Anchor.TOP_RIGHT);
+		lblPreviousPage = new Label(15+lblH*2, 120, lblH, "Previous page", font, lblC, Label.Anchor.TOP_RIGHT);
 
 		lblNextPage.setCallback(new Label.TouchCallback() {
 			@Override public void touchDown(Label source) {
@@ -100,7 +111,7 @@ public class Canvas extends ApplicationAdapter {
 
 		// Background
 
-		bgTex = Assets.getTransparentLightTex();
+		bgTex = assets.getTransparentLightTex();
 		bgTex.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
 		// Input
@@ -113,10 +124,10 @@ public class Canvas extends ApplicationAdapter {
 
 		// Splash screen
 
-		splashBack = new Sprite(Assets.getWhiteTex());
-		splashGdxLogo = Assets.getSplashAtlas().createSprite("gdxlogo");
-		splashTexture = Assets.getSplashAtlas().createSprite("texture");
-		splashTitle = Assets.getSplashAtlas().createSprite("title");
+		splashBack = new Sprite(assets.getWhiteTex());
+		splashGdxLogo = assets.getSplashAtlas().createSprite("gdxlogo");
+		splashTexture = assets.getSplashAtlas().createSprite("texture");
+		splashTitle = assets.getSplashAtlas().createSprite("title");
 
 		// Post animation for one frame just to let Gdx context initialize with screen sizes.
 		Gdx.app.postRunnable(new Runnable() {
@@ -257,14 +268,18 @@ public class Canvas extends ApplicationAdapter {
 		camera.update();
 	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		// By some reason LwjglCanvas kills OpenGL context before this method call.
+		// Check out for LibGDX fix some time later in here
+		assets.dispose();
+	}
+
 	public Vector2 screenToWorld(int x, int y) {
 		Vector3 v3 = new Vector3(x, y, 0);
 		camera.unproject(v3);
 		return new Vector2(v3.x, v3.y);
-	}
-
-	public OrthographicCamera getCamera() {
-		return camera;
 	}
 
 	public void requestPackReload(String packPath) {
@@ -275,6 +290,19 @@ public class Canvas extends ApplicationAdapter {
 
 	public void setCallback(Callback callback) {
 		this.callback = callback;
+	}
+
+	//region Accessors
+	public OrthographicCamera getCamera() {
+		return camera;
+	}
+	public Assets getAssets() {
+		return assets;
+	}
+	//endregion
+
+	public interface Callback {
+		void atlasError();
 	}
 
 	private final InputProcessor buttonsInputProcessor = new InputAdapter() {

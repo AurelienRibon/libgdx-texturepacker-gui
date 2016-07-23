@@ -1,5 +1,7 @@
 package aurelienribon.texturepackergui;
 
+import aurelienribon.texturepackergui.canvas.Canvas;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 
 import javax.swing.*;
@@ -21,7 +23,8 @@ public class Main {
 			}
 
 			Canvas canvas = new Canvas();
-			LwjglCanvas glCanvas = new LwjglCanvas(canvas);
+			LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+			LwjglCanvas glCanvas = new LwjglCanvas(canvas, config);
 
 			MainWindow mw = new MainWindow(canvas, glCanvas.getCanvas());
 			mw.pack();

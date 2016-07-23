@@ -1,4 +1,4 @@
-package aurelienribon.texturepackergui;
+package aurelienribon.texturepackergui.canvas;
 
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenAccessor;
@@ -43,7 +43,7 @@ public class Label {
 		this.color = color;
 		this.anchor = anchor;
 
-		this.bg = new Sprite(Assets.getWhiteTex());
+		this.bg = new Sprite(Canvas.inst().getAssets().getWhiteTex());
 		bg.setSize(w*11/10, h);
 		bg.setColor(color);
 
