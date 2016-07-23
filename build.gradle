@@ -9,7 +9,7 @@ allprojects {
     version = '4.0'
     ext {
         appName = 'gdx-texturepacker-ui'
-    	gdxVersion = '0.9.9'
+    	gdxVersion = '1.9.3'
     }
 
     repositories {

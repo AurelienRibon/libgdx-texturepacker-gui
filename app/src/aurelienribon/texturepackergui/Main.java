@@ -1,13 +1,11 @@
 package aurelienribon.texturepackergui;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,7 +21,7 @@ public class Main {
 			}
 
 			Canvas canvas = new Canvas();
-			LwjglCanvas glCanvas = new LwjglCanvas(canvas, true);
+			LwjglCanvas glCanvas = new LwjglCanvas(canvas);
 
 			MainWindow mw = new MainWindow(canvas, glCanvas.getCanvas());
 			mw.pack();

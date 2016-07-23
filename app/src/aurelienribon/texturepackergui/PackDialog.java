@@ -3,7 +3,7 @@ package aurelienribon.texturepackergui;
 import aurelienribon.ui.components.PaintedPanel;
 import aurelienribon.ui.css.Style;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.tools.imagepacker.TexturePacker2;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import org.apache.commons.io.IOUtils;
 
 import javax.swing.*;
@@ -60,7 +60,7 @@ public class PackDialog extends javax.swing.JDialog {
 
 			if (isValid) {
 				try {
-					TexturePacker2.process(pack.getSettings(), pack.getInput(), pack.getOutput(), pack.getFilename());
+					TexturePacker.process(pack.getSettings(), pack.getInput(), pack.getOutput(), pack.getFilename());
 					System.out.println("Done!");
 				} catch (RuntimeException ex) {
 					System.err.println("[error] Exception occured: " + ex.getMessage());
@@ -109,7 +109,7 @@ public class PackDialog extends javax.swing.JDialog {
 
 				if (isValid) {
 					try {
-						TexturePacker2.process(pack.getSettings(), pack.getInput(), pack.getOutput(), pack.getFilename());
+						TexturePacker.process(pack.getSettings(), pack.getInput(), pack.getOutput(), pack.getFilename());
 						System.out.println("Done!");
 					} catch (RuntimeException ex) {
 						System.err.println("[error] Exception occured: " + ex.getMessage());
