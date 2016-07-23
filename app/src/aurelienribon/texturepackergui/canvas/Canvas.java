@@ -272,7 +272,7 @@ public class Canvas extends ApplicationAdapter {
 	public void dispose() {
 		super.dispose();
 		// By some reason LwjglCanvas kills OpenGL context before this method call.
-		// Check out for LibGDX fix some time later in here
+		// Check out for LibGDX fix some time later in here https://github.com/libgdx/libgdx/issues/4203
 		assets.dispose();
 	}
 
