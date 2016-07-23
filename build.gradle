@@ -5,6 +5,9 @@ buildscript {
 }
 
 allprojects {
+    apply plugin: "eclipse"
+    apply plugin: "idea"
+
 	group 'aurelienribon'
     version = '4.0'
     ext {
@@ -35,4 +38,8 @@ project(':app') {
 
 project(':swing-css') {
 	apply plugin: 'java'
+}
+
+tasks.eclipse.doLast {
+    delete ".project"
 }
