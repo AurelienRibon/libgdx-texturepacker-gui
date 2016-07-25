@@ -2,7 +2,9 @@ package aurelienribon.texturepackergui.canvas;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
@@ -10,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 public class Assets extends AssetManager {
 	private final AssetManager manager;
 	private boolean initialized = false;
+	private BitmapFont font;
 
 	public Assets() {
 		manager = new AssetManager();
@@ -23,9 +26,10 @@ public class Assets extends AssetManager {
 
 		manager.load("data/transparent-light.png", Texture.class);
 		manager.load("data/transparent-dark.png", Texture.class);
-		manager.load("data/white.png", Texture.class);
-		manager.load("data/splash.pack", TextureAtlas.class);
+		manager.load("data/canvas.atlas", TextureAtlas.class);
 		while (!manager.update()) {}
+
+		font = new BitmapFont();
 	}
 
 	public void dispose() {
@@ -34,6 +38,7 @@ public class Assets extends AssetManager {
 		}
 		initialized = false;
 		manager.dispose();
+		font.dispose();
 	}
 
 	public AssetManager getManager() {
@@ -42,6 +47,10 @@ public class Assets extends AssetManager {
 
 	public Texture getTransparentLightTex() {return manager.get("data/transparent-light.png", Texture.class);}
 	public Texture getTransparentDarkTex() {return manager.get("data/transparent-dark.png", Texture.class);}
-	public Texture getWhiteTex() {return manager.get("data/white.png", Texture.class);}
-	public TextureAtlas getSplashAtlas() {return manager.get("data/splash.pack", TextureAtlas.class);}
+	public TextureRegion getWhiteTex() {return getCanvasAtlas().findRegion("white");}
+	public TextureAtlas getCanvasAtlas() {return manager.get("data/canvas.atlas", TextureAtlas.class);}
+
+	public BitmapFont getFont() {
+		return font;
+	}
 }

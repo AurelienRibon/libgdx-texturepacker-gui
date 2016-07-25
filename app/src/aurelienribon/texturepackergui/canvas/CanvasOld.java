@@ -1,10 +1,6 @@
 package aurelienribon.texturepackergui.canvas;
 
 import aurelienribon.accessors.SpriteAccessor;
-import aurelienribon.texturepackergui.canvas.widgets.CanvasBackgroundWidget;
-import aurelienribon.texturepackergui.canvas.widgets.InfoPanel;
-import aurelienribon.texturepackergui.canvas.widgets.PageChangeButton;
-import aurelienribon.texturepackergui.canvas.widgets.PagePreview;
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
@@ -22,21 +18,14 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class Canvas extends ApplicationAdapter {
-	private static Canvas instance;
+public class CanvasOld extends ApplicationAdapter {
+	private static CanvasOld instance;
 
 	private final List<Sprite> sprites = new ArrayList<Sprite>();
 	private OrthographicCamera camera;
@@ -65,12 +54,9 @@ public class Canvas extends ApplicationAdapter {
 	private Sprite splashTexture;
 	private Sprite splashTitle;
 	private final TweenManager tweenManager = new TweenManager();
-	private Stage stage;
-
-	private PagePreview pagePreview;
 
 	/** Singleton accessor */
-	public static Canvas inst() {
+	public static CanvasOld inst() {
 		if (instance == null) {
 			throw new IllegalStateException("Canvas is not initialized yet");
 		}
@@ -91,11 +77,8 @@ public class Canvas extends ApplicationAdapter {
 
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch = new SpriteBatch();
-		stage = new Stage(new ScreenViewport(), batch);
 		font = new BitmapFont();
 		drawer = new ShapeRenderer();
-
-		Gdx.input.setInputProcessor(stage);
 
 		//Labels
 
@@ -131,11 +114,11 @@ public class Canvas extends ApplicationAdapter {
 
 		// Input
 
-		panZoomInputProcessor = new PanZoomInputProcessor(this);
+		panZoomInputProcessor = new PanZoomInputProcessor(/*this*/null);
 		inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor(panZoomInputProcessor);
 		inputMultiplexer.addProcessor(buttonsInputProcessor);
-//		Gdx.input.setInputProcessor(inputMultiplexer);
+		Gdx.input.setInputProcessor(inputMultiplexer);
 
 		// Splash screen
 
@@ -178,64 +161,6 @@ public class Canvas extends ApplicationAdapter {
                     .start(tweenManager);
 			}
 		});
-
-		// Stage layout
-		{
-//			stage.setDebugAll(true);
-
-			// Background
-			{
-				CanvasBackgroundWidget canvasBackgroundWidget = new CanvasBackgroundWidget(assets);
-				stage.addActor(canvasBackgroundWidget);
-			}
-
-			// Page preview
-			{
-				pagePreview = new PagePreview(assets);
-				stage.addActor(pagePreview);
-			}
-
-			// Page buttons
-			{
-				VerticalGroup verticalGroup = new VerticalGroup();
-				verticalGroup.space(6f);
-
-				PageChangeButton btnNextPage = new PageChangeButton(assets, "Next page");
-				PageChangeButton btnPrevPage = new PageChangeButton(assets, "Previous page");
-
-				btnNextPage.addListener(new ClickListener() {
-					@Override
-					public void clicked(InputEvent event, float x, float y) {
-						nextPageRequested = true;
-					}
-				});
-				btnPrevPage.addListener(new ClickListener() {
-					@Override
-					public void clicked(InputEvent event, float x, float y) {
-						previousPageRequested = true;
-					}
-				});
-
-				verticalGroup.addActor(btnNextPage);
-				verticalGroup.addActor(btnPrevPage);
-
-				Container container = new Container<>(verticalGroup);
-				container.setFillParent(true);
-				container.align(Align.topRight);
-				container.padTop(10f);
-				stage.addActor(container);
-			}
-
-			// Info pane
-			{
-				InfoPanel infoPanel = new InfoPanel(assets);
-
-				Container container = new Container<>(infoPanel);
-				container.setFillParent(true);
-				container.align(Align.bottomLeft);
-				stage.addActor(container);
-			}
-		}
 	}
 
 	@Override
@@ -245,19 +170,11 @@ public class Canvas extends ApplicationAdapter {
 		if (previousPageRequested) {
 			previousPageRequested = false;
 			index = index-1 < 0 ? sprites.size()-1 : index-1;
-
-			if (atlas != null) {
-				pagePreview.setPage(sprites.get(index).getTexture());
-			}
 		}
 
 		if (nextPageRequested) {
 			nextPageRequested = false;
 			index = index+1 >= sprites.size() ? 0 : index+1;
-
-			if (atlas != null) {
-				pagePreview.setPage(sprites.get(index).getTexture());
-			}
 		}
 
 		if (packReloadRequested) {
@@ -273,6 +190,10 @@ public class Canvas extends ApplicationAdapter {
 					atlas = new TextureAtlas(packFile);
 					List<Texture> textures = new ArrayList<Texture>();
 
+//					for (AtlasRegion region : atlas.getRegions()) {
+//						if (!textures.contains(region.getTexture()))
+//							textures.add(region.getTexture());
+//					}
 					for (Texture texture : atlas.getTextures()) {
 						textures.add(texture);
 					}
@@ -289,10 +210,6 @@ public class Canvas extends ApplicationAdapter {
 					sprites.clear();
 					callback.atlasError();
 				}
-			}
-
-			if (atlas != null) {
-				pagePreview.setPage(sprites.get(index).getTexture());
 			}
 		}
 
@@ -342,12 +259,6 @@ public class Canvas extends ApplicationAdapter {
 		splashTexture.draw(batch);
 		splashTitle.draw(batch);
 		batch.end();
-
-		//=======================================
-		float delta = Gdx.graphics.getDeltaTime();
-
-		stage.act(delta);
-		stage.draw();
 	}
 
 	@Override
@@ -356,14 +267,11 @@ public class Canvas extends ApplicationAdapter {
 		camera.viewportWidth = width;
 		camera.viewportHeight = height;
 		camera.update();
-
-		stage.getViewport().update(width, height, true);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		stage.dispose();
 		// By some reason LwjglCanvas kills OpenGL context before this method call.
 		// Check out for LibGDX fix some time later in here https://github.com/libgdx/libgdx/issues/4203
 		assets.dispose();

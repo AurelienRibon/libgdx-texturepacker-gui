@@ -462,8 +462,6 @@ public class MainWindow extends JFrame {
         jToolBar1.setRollover(true);
         jToolBar1.setOpaque(false);
 
-		//TODO double check
-//        newPackBtn.setIcon(new javax.swing.ImageIcon(("/res/gfx/ic_add.png"))); // NOI18N
         newPackBtn.setIcon(new ImageIcon(loadImage("gfx/ic_add.png"))); // NOI18N
 
         newPackBtn.setText("New pack");

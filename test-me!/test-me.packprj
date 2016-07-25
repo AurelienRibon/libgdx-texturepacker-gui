@@ -1,5 +1,5 @@
 name=test-me!
-filename=
+filename=test.atlas
 input=input
 output=output
 
@@ -15,7 +15,7 @@ format=RGBA8888
 ignoreBlankImages=true
 jpegQuality=0.9
 maxHeight=1024
-maxWidth=1024
+maxWidth=512
 minHeight=16
 minWidth=16
 outputFormat=png
