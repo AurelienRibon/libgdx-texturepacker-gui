@@ -15,10 +15,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -55,10 +52,10 @@ public class Canvas extends ApplicationAdapter {
 	private TextureAtlas atlas;
 	private int index = 0;
 
-	private boolean previousPageRequested = false;
-	private boolean nextPageRequested = false;
-	private boolean packReloadRequested = false;
-	private FileHandle packFile = null;
+//	private boolean previousPageRequested = false;
+//	private boolean nextPageRequested = false;
+//	private boolean packReloadRequested = false;
+//	private FileHandle packFile = null;
 
 	private Sprite splashBack;
 	private Sprite splashGdxLogo;
@@ -68,6 +65,7 @@ public class Canvas extends ApplicationAdapter {
 	private Stage stage;
 
 	private PagePreview pagePreview;
+	private InfoPanel infoPanel;
 
 	/** Singleton accessor */
 	public static Canvas inst() {
@@ -111,13 +109,13 @@ public class Canvas extends ApplicationAdapter {
 
 		lblNextPage.setCallback(new Label.TouchCallback() {
 			@Override public void touchDown(Label source) {
-				nextPageRequested = true;
+				showNextPage();
 			}
 		});
 
 		lblPreviousPage.setCallback(new Label.TouchCallback() {
 			@Override public void touchDown(Label source) {
-				previousPageRequested = true;
+				showPrevPage();
 			}
 		});
 
@@ -192,6 +190,14 @@ public class Canvas extends ApplicationAdapter {
 			// Page preview
 			{
 				pagePreview = new PagePreview(assets);
+				pagePreview.setListener(new PagePreview.Listener() {
+					@Override
+					public void onZoomChanged(int percentage) {
+						infoPanel.setZoomLevel(percentage);
+					}
+				});
+				pagePreview.pack();
+
 				stage.addActor(pagePreview);
 			}
 
@@ -206,13 +212,15 @@ public class Canvas extends ApplicationAdapter {
 				btnNextPage.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
-						nextPageRequested = true;
+//						nextPageRequested = true;
+						showNextPage();
 					}
 				});
 				btnPrevPage.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
-						previousPageRequested = true;
+//						previousPageRequested = true;
+						showPrevPage();
 					}
 				});
 
@@ -228,7 +236,7 @@ public class Canvas extends ApplicationAdapter {
 
 			// Info pane
 			{
-				InfoPanel infoPanel = new InfoPanel(assets);
+				infoPanel = new InfoPanel(assets);
 
 				Container container = new Container<>(infoPanel);
 				container.setFillParent(true);
@@ -241,60 +249,6 @@ public class Canvas extends ApplicationAdapter {
 	@Override
 	public void render() {
 		tweenManager.update(Gdx.graphics.getDeltaTime());
-
-		if (previousPageRequested) {
-			previousPageRequested = false;
-			index = index-1 < 0 ? sprites.size()-1 : index-1;
-
-			if (atlas != null) {
-				pagePreview.setPage(sprites.get(index).getTexture());
-			}
-		}
-
-		if (nextPageRequested) {
-			nextPageRequested = false;
-			index = index+1 >= sprites.size() ? 0 : index+1;
-
-			if (atlas != null) {
-				pagePreview.setPage(sprites.get(index).getTexture());
-			}
-		}
-
-		if (packReloadRequested) {
-			packReloadRequested = false;
-			index = 0;
-			panZoomInputProcessor.reset();
-
-			sprites.clear();
-			if (atlas != null) atlas.dispose();
-
-			if (packFile != null && packFile.exists()) {
-				try {
-					atlas = new TextureAtlas(packFile);
-					List<Texture> textures = new ArrayList<Texture>();
-
-					for (Texture texture : atlas.getTextures()) {
-						textures.add(texture);
-					}
-
-					for (Texture tex : textures) {
-						Sprite sp = new Sprite(tex);
-						sp.setOrigin(sp.getWidth()/2, sp.getHeight()/2);
-						sp.setPosition(-sp.getOriginX(), -sp.getOriginY());
-						sprites.add(sp);
-					}
-
-				} catch (GdxRuntimeException ex) {
-					atlas = null;
-					sprites.clear();
-					callback.atlasError();
-				}
-			}
-
-			if (atlas != null) {
-				pagePreview.setPage(sprites.get(index).getTexture());
-			}
-		}
 
 		// Render
 
@@ -360,13 +314,59 @@ public class Canvas extends ApplicationAdapter {
 		stage.getViewport().update(width, height, true);
 	}
 
+	// By some reason LwjglCanvas kills OpenGL context before this method call.
+	// Check out for LibGDX fix some time later in here https://github.com/libgdx/libgdx/issues/4203
 	@Override
 	public void dispose() {
 		super.dispose();
+		if (atlas != null) atlas.dispose();
 		stage.dispose();
-		// By some reason LwjglCanvas kills OpenGL context before this method call.
-		// Check out for LibGDX fix some time later in here https://github.com/libgdx/libgdx/issues/4203
 		assets.dispose();
+	}
+
+	public void reloadPack(String packPath) {
+		index = 0;
+		sprites.clear();
+		panZoomInputProcessor.reset();
+		pagePreview.reset();
+		infoPanel.setPagesAmount(0);
+		if (atlas != null) atlas.dispose();
+
+		if (packPath != null) {
+			FileHandle packFile = Gdx.files.absolute(packPath);
+			if (packFile != null && packFile.exists()) {
+				try {
+					atlas = new TextureAtlas(packFile);
+					List<Texture> textures = new ArrayList<>();
+
+					// We could use simple atlas.getTextures(), but it returns them in random order...
+					for (TextureRegion region : atlas.getRegions()) {
+						if (!textures.contains(region.getTexture()))
+							textures.add(region.getTexture());
+					}
+
+					for (Texture tex : textures) {
+						Sprite sp = new Sprite(tex);
+						sp.setOrigin(sp.getWidth() / 2, sp.getHeight() / 2);
+						sp.setPosition(-sp.getOriginX(), -sp.getOriginY());
+						sprites.add(sp);
+					}
+
+					pagePreview.setPage(sprites.get(index).getTexture());
+					infoPanel.setCurrentPage(index+1);
+					infoPanel.setPagesAmount(sprites.size());
+
+				} catch (GdxRuntimeException ex) {
+					atlas = null;
+					sprites.clear();
+					callback.atlasError();
+				}
+			}
+		}
+	}
+
+	public void setCallback(Callback callback) {
+		this.callback = callback;
 	}
 
 	public Vector2 screenToWorld(int x, int y) {
@@ -375,14 +375,22 @@ public class Canvas extends ApplicationAdapter {
 		return new Vector2(v3.x, v3.y);
 	}
 
-	public void requestPackReload(String packPath) {
-		packReloadRequested = true;
-		if (packPath != null) packFile = Gdx.files.absolute(packPath);
-		else packFile = null;
+	private void showNextPage() {
+		if (atlas == null) return;
+
+		index = index+1 >= sprites.size() ? 0 : index+1;
+
+		pagePreview.setPage(sprites.get(index).getTexture());
+		infoPanel.setCurrentPage(index+1);
 	}
 
-	public void setCallback(Callback callback) {
-		this.callback = callback;
+	private void showPrevPage() {
+		if (atlas == null) return;
+
+		index = index-1 < 0 ? sprites.size()-1 : index-1;
+
+		pagePreview.setPage(sprites.get(index).getTexture());
+		infoPanel.setCurrentPage(index+1);
 	}
 
 	//region Accessors

@@ -36,7 +36,7 @@ public class InfoPanel extends WidgetGroup {
         {
             VerticalGroup verticalGroup = new VerticalGroup();
             verticalGroup.align(Align.left);
-            verticalGroup.space(6f);
+            verticalGroup.space(4f);
 
             Label.LabelStyle labelStyle = new Label.LabelStyle(assets.getFont(), Color.WHITE);
             lblCurrentPage = new Label("", labelStyle);
@@ -55,7 +55,7 @@ public class InfoPanel extends WidgetGroup {
         }
 
         updatePagesTest();
-        setZoom(100f);
+        setZoomLevel(100f);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class InfoPanel extends WidgetGroup {
     @Override
     public float getPrefHeight() { return HEIGHT; }
 
-    private void setZoom(float zoom) {
+    public void setZoomLevel(float zoom) {
         lblZoom.setText(String.format("Zoom: %.0f%%", zoom));
     }
 

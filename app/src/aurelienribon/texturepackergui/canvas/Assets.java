@@ -30,6 +30,7 @@ public class Assets extends AssetManager {
 		while (!manager.update()) {}
 
 		font = new BitmapFont();
+		font.getData().markupEnabled = true;
 	}
 
 	public void dispose() {

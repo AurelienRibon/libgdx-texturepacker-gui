@@ -44,7 +44,7 @@ public class Pack extends ChangeableObject {
 	public void setInput(String input) {this.input = input;}
 	public void setOutput(String output) {this.output = output;}
 
-	public String getName() {return name.equals("") ? "unamed" : name;}
+	public String getName() {return name.equals("") ? "unnamed" : name;}
 	public String getRawFilename() {return filename;}
 	public String getFilename() {return filename.equals("") ? getName() + ".atlas" : filename;}
 	public String getInput() {return input;}

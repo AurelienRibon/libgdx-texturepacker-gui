@@ -150,12 +150,14 @@ public class MainWindow extends JFrame {
 
 			if (pack != null) {
 				loadPack(pack);
-				canvas.requestPackReload(pack.getOutput() + "/" + pack.getFilename());
+//				canvas.reloadPack(pack.getOutput() + "/" + pack.getFilename());
+				reloadPackInCanvas(pack.getOutput() + "/" + pack.getFilename());
 			} else {
 				inputField.setText("");
 				outputField.setText("");
 				filenameField.setText("");
-				canvas.requestPackReload(null);
+//				canvas.reloadPack(null);
+				reloadPackInCanvas(null);
 			}
 		}
 	};
@@ -318,7 +320,8 @@ public class MainWindow extends JFrame {
 		dialog.setLocationRelativeTo(this);
 		dialog.setVisible(true);
 
-		canvas.requestPackReload(pack.getOutput() + "/" + pack.getFilename());
+//		canvas.reloadPack(pack.getOutput() + "/" + pack.getFilename());
+		reloadPackInCanvas(pack.getOutput() + "/" + pack.getFilename());
 	}
 
 	private void packAll() {
@@ -330,7 +333,8 @@ public class MainWindow extends JFrame {
 		dialog.setLocationRelativeTo(this);
 		dialog.setVisible(true);
 
-		canvas.requestPackReload(pack.getOutput() + "/" + pack.getFilename());
+//		canvas.reloadPack(pack.getOutput() + "/" + pack.getFilename());
+		reloadPackInCanvas(pack.getOutput() + "/" + pack.getFilename());
 	}
 
 	private void copySettingsToAll() {
@@ -419,6 +423,15 @@ public class MainWindow extends JFrame {
 			Container c = (Container) cmp;
 			for (Component child : c.getComponents()) enable(child, value);
 		}
+	}
+
+	private void reloadPackInCanvas(final String packPath) {
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run() {
+				canvas.reloadPack(packPath);
+			}
+		});
 	}
 
 	// -------------------------------------------------------------------------
