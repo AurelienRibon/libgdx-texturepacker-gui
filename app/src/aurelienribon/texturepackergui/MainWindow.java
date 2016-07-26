@@ -63,6 +63,7 @@ public class MainWindow extends JFrame {
 		renderPanel.add(canvasCmp, BorderLayout.CENTER);
 
 		newPackBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {newPack();}});
+		copyPackBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {copyPack();}});
 		renamePackBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {renamePack();}});
 		deletePackBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {deletePack();}});
 		moveUpPackBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {moveUp();}});
@@ -124,6 +125,7 @@ public class MainWindow extends JFrame {
 			if (selectedPack != null) savePack(selectedPack);
 			selectedPack = pack;
 
+			copyPackBtn.setEnabled(pack != null);
 			renamePackBtn.setEnabled(pack != null);
 			deletePackBtn.setEnabled(pack != null);
 			moveUpPackBtn.setEnabled(pack != null);
@@ -152,6 +154,17 @@ public class MainWindow extends JFrame {
 	private void newPack() {
 		Pack pack = new Pack();
 		String name = JOptionPane.showInputDialog(this, "Name of the pack?", "");
+		if (name != null) {
+			pack.setName(name);
+			packs.add(pack);
+			packsList.setSelectedValue(pack, true);
+		}
+	}
+
+	private void copyPack() {
+		Pack selectedPack = (Pack) packsList.getSelectedValue();
+		Pack pack = new Pack(selectedPack);
+		String name = JOptionPane.showInputDialog(this, "Name of the pack?", selectedPack.getName());
 		if (name != null) {
 			pack.setName(name);
 			packs.add(pack);
@@ -381,6 +394,7 @@ public class MainWindow extends JFrame {
         jToolBar1 = new JToolBar();
         newPackBtn = new JButton();
         renamePackBtn = new JButton();
+		copyPackBtn = new JButton();
         deletePackBtn = new JButton();
         moveUpPackBtn = new JButton();
         moveDownPackBtn = new JButton();
@@ -476,6 +490,11 @@ public class MainWindow extends JFrame {
         renamePackBtn.setToolTipText("Rename the selected pack");
         renamePackBtn.setFocusable(false);
         jToolBar1.add(renamePackBtn);
+
+        copyPackBtn.setIcon(new ImageIcon(loadImage("gfx/ic_copy.png"))); // NOI18N
+        copyPackBtn.setToolTipText("Create copy of selected pack");
+        copyPackBtn.setFocusable(false);
+        jToolBar1.add(copyPackBtn);
 
         deletePackBtn.setIcon(new ImageIcon(loadImage("gfx/ic_delete.png"))); // NOI18N
         deletePackBtn.setToolTipText("Delete the selected pack");
@@ -1027,6 +1046,7 @@ public class MainWindow extends JFrame {
     private JPanel centerPanel;
     private JLabel commentLabel;
     private JPanel configPanel;
+	private JButton copyPackBtn;
     private JButton copySettingsBtn;
     private JButton deletePackBtn;
     private JTextField filenameField;

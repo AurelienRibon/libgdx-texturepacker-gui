@@ -19,15 +19,24 @@ import java.util.List;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class Pack extends ChangeableObject {
+	private final Settings settings;
 	private String name = "";
 	private String filename = "";
 	private String input = "";
 	private String output = "";
-	private Settings settings = new Settings();
 
 	public Pack() {
+		settings = new Settings();
 		settings.maxWidth = 2048; // Default settings.maxWidth value (1024) is outdated and 2048 is recommended
 		settings.maxHeight = 2048; // Default settings.maxHeight value (1024) is outdated and 2048 is recommended
+	}
+
+	public Pack(Pack pack) {
+		settings = new Settings(pack.settings);
+		this.name = pack.name;
+		this.filename = pack.filename;
+		this.input = pack.input;
+		this.output = pack.output;
 	}
 
 	public void setName(String name) {this.name = name; firePropertyChanged("name");}
