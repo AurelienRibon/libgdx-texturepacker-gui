@@ -333,6 +333,8 @@ public class MainWindow extends JFrame {
 		opt_paddingX_nud.setValue(stgs.paddingY);
 		opt_pot_chk.setSelected(stgs.pot);
 		opt_rotation_chk.setSelected(stgs.rotation);
+		opt_use_indices.setSelected(stgs.useIndexes);
+		opt_subdirs.setSelected(stgs.combineSubdirectories);
 		opt_stripWhitespaceX_chk.setSelected(stgs.stripWhitespaceX);
 		opt_stripWhitespaceY_chk.setSelected(stgs.stripWhitespaceY);
 		opt_wrapX_cbox.setSelectedItem(stgs.wrapX);
@@ -366,6 +368,8 @@ public class MainWindow extends JFrame {
 		stgs.paddingY = (Integer)opt_paddingY_nud.getValue();
 		stgs.pot = opt_pot_chk.isSelected();
 		stgs.rotation = opt_rotation_chk.isSelected();
+		stgs.combineSubdirectories = opt_subdirs.isSelected();
+		stgs.useIndexes = opt_use_indices.isSelected();
 		stgs.stripWhitespaceX = opt_stripWhitespaceX_chk.isSelected();
 		stgs.stripWhitespaceY = opt_stripWhitespaceY_chk.isSelected();
 		stgs.wrapX = TextureWrap.valueOf((String)opt_wrapX_cbox.getSelectedItem());
@@ -423,6 +427,7 @@ public class MainWindow extends JFrame {
         jPanel3 = new JPanel();
         jLabel8 = new JLabel();
         opt_minPageHeight_nud = new JSpinner();
+		opt_use_indices = new JCheckBox();
         opt_pot_chk = new JCheckBox();
         opt_duplicatePadding_chk = new JCheckBox();
         opt_alias_chk = new JCheckBox();
@@ -433,6 +438,7 @@ public class MainWindow extends JFrame {
         opt_alphaThreashold_nud = new JSpinner();
         opt_debug_chk = new JCheckBox();
         opt_fast_chk = new JCheckBox();
+        opt_subdirs = new JCheckBox();
         jLabel18 = new JLabel();
         opt_stripWhitespaceY_chk = new JCheckBox();
         jLabel6 = new JLabel();
@@ -693,6 +699,9 @@ public class MainWindow extends JFrame {
         opt_pot_chk.setText("Force PoT");
         opt_pot_chk.setOpaque(false);
 
+		opt_use_indices.setText("Use indices");
+		opt_use_indices.setOpaque(false);
+
         opt_duplicatePadding_chk.setText("Duplicate padding");
         opt_duplicatePadding_chk.setOpaque(false);
 
@@ -728,6 +737,9 @@ public class MainWindow extends JFrame {
 
         opt_rotation_chk.setText("Allow rotations");
         opt_rotation_chk.setOpaque(false);
+
+		opt_subdirs.setText("Include subdirs");
+		opt_subdirs.setOpaque(false);
 
         jLabel7.setHorizontalAlignment(SwingConstants.RIGHT);
         jLabel7.setText("Min page width");
@@ -823,6 +835,7 @@ public class MainWindow extends JFrame {
                             .addComponent(opt_edgePadding_chk)
                             .addComponent(opt_fast_chk)
                             .addComponent(opt_rotation_chk)
+                            .addComponent(opt_subdirs)
                             .addComponent(opt_stripWhitespaceY_chk)
                             .addComponent(opt_stripWhitespaceX_chk))
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -839,6 +852,7 @@ public class MainWindow extends JFrame {
                             .addGroup(GroupLayout.Alignment.TRAILING, jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addComponent(opt_ignoreBlankImages_chk)
                                 .addComponent(opt_debug_chk)
+                                .addComponent(opt_use_indices)
                                 .addComponent(opt_pot_chk)
                                 .addComponent(opt_alias_chk))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -884,9 +898,9 @@ public class MainWindow extends JFrame {
 
         jPanel3Layout.linkSize(SwingConstants.HORIZONTAL, opt_format_cbox, opt_maxPageHeight_nud, opt_maxPageWidth_nud, opt_minPageHeight_nud, opt_minPageWidth_nud, opt_outputFormat_cbox);
 
-        jPanel3Layout.linkSize(SwingConstants.HORIZONTAL, opt_duplicatePadding_chk, opt_edgePadding_chk, opt_fast_chk, opt_rotation_chk, opt_stripWhitespaceY_chk);
+        jPanel3Layout.linkSize(SwingConstants.HORIZONTAL, opt_duplicatePadding_chk, opt_edgePadding_chk, opt_fast_chk, opt_rotation_chk, opt_stripWhitespaceY_chk, opt_subdirs);
 
-        jPanel3Layout.linkSize(SwingConstants.HORIZONTAL, opt_alias_chk, opt_debug_chk, opt_ignoreBlankImages_chk, opt_pot_chk);
+        jPanel3Layout.linkSize(SwingConstants.HORIZONTAL, opt_alias_chk, opt_debug_chk, opt_use_indices, opt_ignoreBlankImages_chk, opt_pot_chk);
 
         jPanel3Layout.linkSize(SwingConstants.HORIZONTAL, jLabel10, jLabel16, jLabel17, jLabel18, jLabel19, jLabel2, jLabel20, jLabel3, jLabel4, jLabel5, jLabel6, jLabel7, jLabel8, jLabel9);
 
@@ -962,7 +976,9 @@ public class MainWindow extends JFrame {
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(opt_stripWhitespaceY_chk)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(opt_rotation_chk))
+                        .addComponent(opt_rotation_chk)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(opt_subdirs))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel18)
@@ -977,7 +993,9 @@ public class MainWindow extends JFrame {
                                 .addGap(46, 46, 46)
                                 .addComponent(opt_ignoreBlankImages_chk, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(opt_debug_chk))
+                                .addComponent(opt_debug_chk)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(opt_use_indices))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(opt_pot_chk)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -1088,22 +1106,24 @@ public class MainWindow extends JFrame {
     private JCheckBox opt_edgePadding_chk;
     private JCheckBox opt_fast_chk;
     private JComboBox opt_filterMag_cbox;
-    private JComboBox opt_filterMin_cbox;
-    private JComboBox opt_format_cbox;
-    private JCheckBox opt_ignoreBlankImages_chk;
-    private JSpinner opt_jpegQuality_nud;
-    private JSpinner opt_maxPageHeight_nud;
-    private JSpinner opt_maxPageWidth_nud;
-    private JSpinner opt_minPageHeight_nud;
-    private JSpinner opt_minPageWidth_nud;
-    private JComboBox opt_outputFormat_cbox;
-    private JSpinner opt_paddingX_nud;
-    private JSpinner opt_paddingY_nud;
-    private JCheckBox opt_pot_chk;
-    private JCheckBox opt_rotation_chk;
-    private JCheckBox opt_stripWhitespaceX_chk;
-    private JCheckBox opt_stripWhitespaceY_chk;
-    private JComboBox opt_wrapX_cbox;
+	private JComboBox opt_filterMin_cbox;
+	private JComboBox opt_format_cbox;
+	private JCheckBox opt_ignoreBlankImages_chk;
+	private JSpinner opt_jpegQuality_nud;
+	private JSpinner opt_maxPageHeight_nud;
+	private JSpinner opt_maxPageWidth_nud;
+	private JSpinner opt_minPageHeight_nud;
+	private JSpinner opt_minPageWidth_nud;
+	private JComboBox opt_outputFormat_cbox;
+	private JSpinner opt_paddingX_nud;
+	private JSpinner opt_paddingY_nud;
+	private JCheckBox opt_pot_chk;
+	private JCheckBox opt_rotation_chk;
+	private JCheckBox opt_use_indices;
+	private JCheckBox opt_stripWhitespaceX_chk;
+	private JCheckBox opt_stripWhitespaceY_chk;
+	private JCheckBox opt_subdirs;
+	private JComboBox opt_wrapX_cbox;
     private JComboBox opt_wrapY_cbox;
     private JTextField outputField;
     private JButton packAllBtn;
