@@ -25,6 +25,11 @@ public class Pack extends ChangeableObject {
 	private String output = "";
 	private Settings settings = new Settings();
 
+	public Pack() {
+		settings.maxWidth = 2048; // Default settings.maxWidth value (1024) is outdated and 2048 is recommended
+		settings.maxHeight = 2048; // Default settings.maxHeight value (1024) is outdated and 2048 is recommended
+	}
+
 	public void setName(String name) {this.name = name; firePropertyChanged("name");}
 	public void setFilename(String filename) {this.filename = filename;}
 	public void setInput(String input) {this.input = input;}
@@ -113,8 +118,8 @@ public class Pack extends ChangeableObject {
 		settings.format = Format.valueOf(find(lines, "format=", defaultSettings.format.toString()));
 		settings.ignoreBlankImages = find(lines, "ignoreBlankImages=", defaultSettings.ignoreBlankImages);
 		settings.jpegQuality = find(lines, "jpegQuality=", defaultSettings.jpegQuality);
-		settings.maxHeight = find(lines, "maxHeight=", defaultSettings.maxHeight);
-		settings.maxWidth = find(lines, "maxWidth=", defaultSettings.maxWidth);
+		settings.maxHeight = find(lines, "maxHeight=", 2048); // defaultSettings.maxHeight value (1024) is outdated and 2048 is recommended
+		settings.maxWidth = find(lines, "maxWidth=", 2048); // defaultSettings.maxWidth value (1024) is outdated and 2048 is recommended
 		settings.minHeight = find(lines, "minHeight=", defaultSettings.minHeight);
 		settings.minWidth = find(lines, "minWidth=", defaultSettings.minWidth);
 		settings.outputFormat = find(lines, "outputFormat=", defaultSettings.outputFormat);

@@ -530,7 +530,7 @@ public class MainWindow extends JFrame {
         jPanel1.setOpaque(false);
 
         jLabel11.setHorizontalAlignment(SwingConstants.RIGHT);
-        jLabel11.setText("Output directory:");
+        jLabel11.setText("Output dir:");
 
         inputField.setColumns(10);
 
@@ -550,7 +550,7 @@ public class MainWindow extends JFrame {
         browseInputBtn.setOpaque(false);
 
         jLabel1.setHorizontalAlignment(SwingConstants.RIGHT);
-        jLabel1.setText("Input directory:");
+        jLabel1.setText("Input dir:");
 
         GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
