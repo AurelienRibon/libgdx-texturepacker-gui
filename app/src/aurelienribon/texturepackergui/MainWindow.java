@@ -18,6 +18,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,12 +27,12 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
+import static aurelienribon.texturepackergui.Prefs.*;
 import static aurelienribon.utils.ImageUtil.loadImage;
 
 public class MainWindow extends JFrame {
 	private final Canvas canvas;
 	private final ObservableList<Pack> packs = new ObservableList<Pack>();
-	private File lastDir = new File(".");
 
 	public MainWindow(final Canvas canvas, Component canvasCmp) {
 		try {
@@ -102,8 +103,16 @@ public class MainWindow extends JFrame {
 
 	public void load(File file) throws IOException {
 		packs.replaceBy(Pack.parse(file));
-		if (packs.isEmpty()) packsList.clearSelection();
-		else packsList.setSelectedIndex(0);
+		if (packs.isEmpty()) {
+			packsList.clearSelection();
+		} else {
+			packsList.setSelectedIndex(0);
+		}
+
+		// Update dialog dirs
+		File dialogDir = file.getParentFile();
+		storeFile(KEY_LAST_DIR_PROJ, dialogDir);
+		storeFile(KEY_LAST_DIR_OUTPUT, dialogDir);
 	}
 
 	private final ListCellRenderer packsListCellRenderer = new DefaultListCellRenderer() {
@@ -207,17 +216,21 @@ public class MainWindow extends JFrame {
 	}
 
 	private void loadProject() {
-		JFileChooser chooser = new JFileChooser(lastDir);
+		JFileChooser chooser = new JFileChooser(getFile(KEY_LAST_DIR_PROJ));
 		chooser.setDialogTitle("Select your project file");
+        chooser.addChoosableFileFilter(new FileNameExtensionFilter("GDX Texture Packer project", "packprj"));
 
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			try {
 				File file = chooser.getSelectedFile();
-				lastDir = file.getParentFile();
+				storeFile(KEY_LAST_DIR_PROJ, file.getParentFile());
 				packs.replaceBy(Pack.parse(file));
-				if (packs.isEmpty()) packsList.clearSelection();
-				else packsList.setSelectedIndex(0);
-			} catch (IOException ex) {
+				if (packs.isEmpty()) {
+                    packsList.clearSelection();
+                } else {
+				    packsList.setSelectedIndex(0);
+                }
+            } catch (IOException ex) {
 				JOptionPane.showMessageDialog(this, "Project file cannot be read.");
 			}
 		}
@@ -227,13 +240,13 @@ public class MainWindow extends JFrame {
 		Pack pack = (Pack) packsList.getSelectedValue();
 		if (pack != null) savePack(pack);
 
-		JFileChooser chooser = new JFileChooser(lastDir);
+		JFileChooser chooser = new JFileChooser(getFile(KEY_LAST_DIR_PROJ));
 		chooser.setDialogTitle("Select your project file");
 
 		if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 			try {
 				File file = chooser.getSelectedFile();
-				lastDir = file.getParentFile();
+				storeFile(KEY_LAST_DIR_PROJ, file.getParentFile());
 				Pack.export(file, packs);
 				JOptionPane.showMessageDialog(this, "Save done.");
 			} catch (IOException ex) {
@@ -243,7 +256,18 @@ public class MainWindow extends JFrame {
 	}
 
 	private void browseInput() {
-		JFileChooser chooser = new JFileChooser(lastDir);
+		// Resolving dialog directory
+		File openDir = getFile(KEY_LAST_DIR_INPUT);
+		Pack pack = (Pack) packsList.getSelectedValue();
+		String inputSt = pack.getInput();
+		if (inputSt != null && !inputSt.trim().isEmpty()) {
+			File inputDir = new File(inputSt);
+			if (inputDir.exists() && inputDir.isDirectory()) {
+				openDir = inputDir;
+			}
+		}
+
+		JFileChooser chooser = new JFileChooser(openDir);
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setFileFilter(new FileFilter() {
 			@Override public boolean accept(File f) {return f.isDirectory();}
@@ -252,13 +276,25 @@ public class MainWindow extends JFrame {
 
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
-			lastDir = file;
 			inputField.setText(file.getPath());
+
+			storeFile(KEY_LAST_DIR_INPUT, file);
 		}
 	}
 
 	private void browseOutput() {
-		JFileChooser chooser = new JFileChooser(lastDir);
+		// Resolving dialog directory
+		File openDir = getFile(KEY_LAST_DIR_OUTPUT);
+		Pack pack = (Pack) packsList.getSelectedValue();
+		String outputSt = pack.getOutput();
+		if (outputSt != null && !outputSt.trim().isEmpty()) {
+			File outputDir = new File(outputSt);
+			if (outputDir.exists() && outputDir.isDirectory()) {
+				openDir = outputDir;
+			}
+		}
+
+		JFileChooser chooser = new JFileChooser(openDir);
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setFileFilter(new FileFilter() {
 			@Override public boolean accept(File f) {return f.isDirectory();}
@@ -267,8 +303,9 @@ public class MainWindow extends JFrame {
 
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
-			lastDir = file;
 			outputField.setText(file.getPath());
+
+			storeFile(KEY_LAST_DIR_OUTPUT, file);
 		}
 	}
 
