@@ -19,11 +19,25 @@ import java.util.List;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class Pack extends ChangeableObject {
+	private final Settings settings;
 	private String name = "";
 	private String filename = "";
 	private String input = "";
 	private String output = "";
-	private Settings settings = new Settings();
+
+	public Pack() {
+		settings = new Settings();
+		settings.maxWidth = 2048; // Default settings.maxWidth value (1024) is outdated and 2048 is recommended
+		settings.maxHeight = 2048; // Default settings.maxHeight value (1024) is outdated and 2048 is recommended
+	}
+
+	public Pack(Pack pack) {
+		settings = new Settings(pack.settings);
+		this.name = pack.name;
+		this.filename = pack.filename;
+		this.input = pack.input;
+		this.output = pack.output;
+	}
 
 	public void setName(String name) {this.name = name; firePropertyChanged("name");}
 	public void setFilename(String filename) {this.filename = filename;}
@@ -32,7 +46,7 @@ public class Pack extends ChangeableObject {
 
 	public String getName() {return name.equals("") ? "unamed" : name;}
 	public String getRawFilename() {return filename;}
-	public String getFilename() {return filename.equals("") ? getName() + ".pack" : filename;}
+	public String getFilename() {return filename.equals("") ? getName() + ".atlas" : filename;}
 	public String getInput() {return input;}
 	public String getOutput() {return output;}
 	public Settings getSettings() {return settings;}
@@ -113,8 +127,8 @@ public class Pack extends ChangeableObject {
 		settings.format = Format.valueOf(find(lines, "format=", defaultSettings.format.toString()));
 		settings.ignoreBlankImages = find(lines, "ignoreBlankImages=", defaultSettings.ignoreBlankImages);
 		settings.jpegQuality = find(lines, "jpegQuality=", defaultSettings.jpegQuality);
-		settings.maxHeight = find(lines, "maxHeight=", defaultSettings.maxHeight);
-		settings.maxWidth = find(lines, "maxWidth=", defaultSettings.maxWidth);
+		settings.maxHeight = find(lines, "maxHeight=", 2048); // defaultSettings.maxHeight value (1024) is outdated and 2048 is recommended
+		settings.maxWidth = find(lines, "maxWidth=", 2048); // defaultSettings.maxWidth value (1024) is outdated and 2048 is recommended
 		settings.minHeight = find(lines, "minHeight=", defaultSettings.minHeight);
 		settings.minWidth = find(lines, "minWidth=", defaultSettings.minWidth);
 		settings.outputFormat = find(lines, "outputFormat=", defaultSettings.outputFormat);

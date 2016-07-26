@@ -18,6 +18,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,12 +27,12 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
+import static aurelienribon.texturepackergui.Prefs.*;
 import static aurelienribon.utils.ImageUtil.loadImage;
 
 public class MainWindow extends JFrame {
 	private final Canvas canvas;
 	private final ObservableList<Pack> packs = new ObservableList<Pack>();
-	private File lastDir = new File(".");
 
 	public MainWindow(final Canvas canvas, Component canvasCmp) {
 		try {
@@ -63,6 +64,7 @@ public class MainWindow extends JFrame {
 		renderPanel.add(canvasCmp, BorderLayout.CENTER);
 
 		newPackBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {newPack();}});
+		copyPackBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {copyPack();}});
 		renamePackBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {renamePack();}});
 		deletePackBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {deletePack();}});
 		moveUpPackBtn.addActionListener(new ActionListener() {@Override public void actionPerformed(ActionEvent e) {moveUp();}});
@@ -101,8 +103,16 @@ public class MainWindow extends JFrame {
 
 	public void load(File file) throws IOException {
 		packs.replaceBy(Pack.parse(file));
-		if (packs.isEmpty()) packsList.clearSelection();
-		else packsList.setSelectedIndex(0);
+		if (packs.isEmpty()) {
+			packsList.clearSelection();
+		} else {
+			packsList.setSelectedIndex(0);
+		}
+
+		// Update dialog dirs
+		File dialogDir = file.getParentFile();
+		storeFile(KEY_LAST_DIR_PROJ, dialogDir);
+		storeFile(KEY_LAST_DIR_OUTPUT, dialogDir);
 	}
 
 	private final ListCellRenderer packsListCellRenderer = new DefaultListCellRenderer() {
@@ -124,6 +134,7 @@ public class MainWindow extends JFrame {
 			if (selectedPack != null) savePack(selectedPack);
 			selectedPack = pack;
 
+			copyPackBtn.setEnabled(pack != null);
 			renamePackBtn.setEnabled(pack != null);
 			deletePackBtn.setEnabled(pack != null);
 			moveUpPackBtn.setEnabled(pack != null);
@@ -152,6 +163,17 @@ public class MainWindow extends JFrame {
 	private void newPack() {
 		Pack pack = new Pack();
 		String name = JOptionPane.showInputDialog(this, "Name of the pack?", "");
+		if (name != null) {
+			pack.setName(name);
+			packs.add(pack);
+			packsList.setSelectedValue(pack, true);
+		}
+	}
+
+	private void copyPack() {
+		Pack selectedPack = (Pack) packsList.getSelectedValue();
+		Pack pack = new Pack(selectedPack);
+		String name = JOptionPane.showInputDialog(this, "Name of the pack?", selectedPack.getName());
 		if (name != null) {
 			pack.setName(name);
 			packs.add(pack);
@@ -194,17 +216,21 @@ public class MainWindow extends JFrame {
 	}
 
 	private void loadProject() {
-		JFileChooser chooser = new JFileChooser(lastDir);
+		JFileChooser chooser = new JFileChooser(getFile(KEY_LAST_DIR_PROJ));
 		chooser.setDialogTitle("Select your project file");
+        chooser.addChoosableFileFilter(new FileNameExtensionFilter("GDX Texture Packer project", "packprj"));
 
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			try {
 				File file = chooser.getSelectedFile();
-				lastDir = file.getParentFile();
+				storeFile(KEY_LAST_DIR_PROJ, file.getParentFile());
 				packs.replaceBy(Pack.parse(file));
-				if (packs.isEmpty()) packsList.clearSelection();
-				else packsList.setSelectedIndex(0);
-			} catch (IOException ex) {
+				if (packs.isEmpty()) {
+                    packsList.clearSelection();
+                } else {
+				    packsList.setSelectedIndex(0);
+                }
+            } catch (IOException ex) {
 				JOptionPane.showMessageDialog(this, "Project file cannot be read.");
 			}
 		}
@@ -214,13 +240,13 @@ public class MainWindow extends JFrame {
 		Pack pack = (Pack) packsList.getSelectedValue();
 		if (pack != null) savePack(pack);
 
-		JFileChooser chooser = new JFileChooser(lastDir);
+		JFileChooser chooser = new JFileChooser(getFile(KEY_LAST_DIR_PROJ));
 		chooser.setDialogTitle("Select your project file");
 
 		if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 			try {
 				File file = chooser.getSelectedFile();
-				lastDir = file.getParentFile();
+				storeFile(KEY_LAST_DIR_PROJ, file.getParentFile());
 				Pack.export(file, packs);
 				JOptionPane.showMessageDialog(this, "Save done.");
 			} catch (IOException ex) {
@@ -230,7 +256,18 @@ public class MainWindow extends JFrame {
 	}
 
 	private void browseInput() {
-		JFileChooser chooser = new JFileChooser(lastDir);
+		// Resolving dialog directory
+		File openDir = getFile(KEY_LAST_DIR_INPUT);
+		Pack pack = (Pack) packsList.getSelectedValue();
+		String inputSt = pack.getInput();
+		if (inputSt != null && !inputSt.trim().isEmpty()) {
+			File inputDir = new File(inputSt);
+			if (inputDir.exists() && inputDir.isDirectory()) {
+				openDir = inputDir;
+			}
+		}
+
+		JFileChooser chooser = new JFileChooser(openDir);
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setFileFilter(new FileFilter() {
 			@Override public boolean accept(File f) {return f.isDirectory();}
@@ -239,13 +276,25 @@ public class MainWindow extends JFrame {
 
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
-			lastDir = file;
 			inputField.setText(file.getPath());
+
+			storeFile(KEY_LAST_DIR_INPUT, file);
 		}
 	}
 
 	private void browseOutput() {
-		JFileChooser chooser = new JFileChooser(lastDir);
+		// Resolving dialog directory
+		File openDir = getFile(KEY_LAST_DIR_OUTPUT);
+		Pack pack = (Pack) packsList.getSelectedValue();
+		String outputSt = pack.getOutput();
+		if (outputSt != null && !outputSt.trim().isEmpty()) {
+			File outputDir = new File(outputSt);
+			if (outputDir.exists() && outputDir.isDirectory()) {
+				openDir = outputDir;
+			}
+		}
+
+		JFileChooser chooser = new JFileChooser(openDir);
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setFileFilter(new FileFilter() {
 			@Override public boolean accept(File f) {return f.isDirectory();}
@@ -254,8 +303,9 @@ public class MainWindow extends JFrame {
 
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
-			lastDir = file;
 			outputField.setText(file.getPath());
+
+			storeFile(KEY_LAST_DIR_OUTPUT, file);
 		}
 	}
 
@@ -320,6 +370,8 @@ public class MainWindow extends JFrame {
 		opt_paddingX_nud.setValue(stgs.paddingY);
 		opt_pot_chk.setSelected(stgs.pot);
 		opt_rotation_chk.setSelected(stgs.rotation);
+		opt_use_indices.setSelected(stgs.useIndexes);
+		opt_subdirs.setSelected(stgs.combineSubdirectories);
 		opt_stripWhitespaceX_chk.setSelected(stgs.stripWhitespaceX);
 		opt_stripWhitespaceY_chk.setSelected(stgs.stripWhitespaceY);
 		opt_wrapX_cbox.setSelectedItem(stgs.wrapX);
@@ -353,6 +405,8 @@ public class MainWindow extends JFrame {
 		stgs.paddingY = (Integer)opt_paddingY_nud.getValue();
 		stgs.pot = opt_pot_chk.isSelected();
 		stgs.rotation = opt_rotation_chk.isSelected();
+		stgs.combineSubdirectories = opt_subdirs.isSelected();
+		stgs.useIndexes = opt_use_indices.isSelected();
 		stgs.stripWhitespaceX = opt_stripWhitespaceX_chk.isSelected();
 		stgs.stripWhitespaceY = opt_stripWhitespaceY_chk.isSelected();
 		stgs.wrapX = TextureWrap.valueOf((String)opt_wrapX_cbox.getSelectedItem());
@@ -381,6 +435,7 @@ public class MainWindow extends JFrame {
         jToolBar1 = new JToolBar();
         newPackBtn = new JButton();
         renamePackBtn = new JButton();
+		copyPackBtn = new JButton();
         deletePackBtn = new JButton();
         moveUpPackBtn = new JButton();
         moveDownPackBtn = new JButton();
@@ -409,6 +464,7 @@ public class MainWindow extends JFrame {
         jPanel3 = new JPanel();
         jLabel8 = new JLabel();
         opt_minPageHeight_nud = new JSpinner();
+		opt_use_indices = new JCheckBox();
         opt_pot_chk = new JCheckBox();
         opt_duplicatePadding_chk = new JCheckBox();
         opt_alias_chk = new JCheckBox();
@@ -419,6 +475,7 @@ public class MainWindow extends JFrame {
         opt_alphaThreashold_nud = new JSpinner();
         opt_debug_chk = new JCheckBox();
         opt_fast_chk = new JCheckBox();
+        opt_subdirs = new JCheckBox();
         jLabel18 = new JLabel();
         opt_stripWhitespaceY_chk = new JCheckBox();
         jLabel6 = new JLabel();
@@ -475,6 +532,11 @@ public class MainWindow extends JFrame {
         renamePackBtn.setFocusable(false);
         jToolBar1.add(renamePackBtn);
 
+        copyPackBtn.setIcon(new ImageIcon(loadImage("gfx/ic_copy.png"))); // NOI18N
+        copyPackBtn.setToolTipText("Create copy of selected pack");
+        copyPackBtn.setFocusable(false);
+        jToolBar1.add(copyPackBtn);
+
         deletePackBtn.setIcon(new ImageIcon(loadImage("gfx/ic_delete.png"))); // NOI18N
         deletePackBtn.setToolTipText("Delete the selected pack");
         deletePackBtn.setFocusable(false);
@@ -528,7 +590,7 @@ public class MainWindow extends JFrame {
         jPanel1.setOpaque(false);
 
         jLabel11.setHorizontalAlignment(SwingConstants.RIGHT);
-        jLabel11.setText("Output directory:");
+        jLabel11.setText("Output dir:");
 
         inputField.setColumns(10);
 
@@ -548,7 +610,7 @@ public class MainWindow extends JFrame {
         browseInputBtn.setOpaque(false);
 
         jLabel1.setHorizontalAlignment(SwingConstants.RIGHT);
-        jLabel1.setText("Input directory:");
+        jLabel1.setText("Input dir:");
 
         GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -601,7 +663,7 @@ public class MainWindow extends JFrame {
         packsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(packsList);
 
-        commentLabel.setText("Leave blank for \"<packname>.pack\"");
+        commentLabel.setText("Leave blank for \"<packname>.atlas\"");
 
         GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -672,6 +734,9 @@ public class MainWindow extends JFrame {
         opt_pot_chk.setText("Force PoT");
         opt_pot_chk.setOpaque(false);
 
+		opt_use_indices.setText("Use indices");
+		opt_use_indices.setOpaque(false);
+
         opt_duplicatePadding_chk.setText("Duplicate padding");
         opt_duplicatePadding_chk.setOpaque(false);
 
@@ -707,6 +772,9 @@ public class MainWindow extends JFrame {
 
         opt_rotation_chk.setText("Allow rotations");
         opt_rotation_chk.setOpaque(false);
+
+		opt_subdirs.setText("Include subdirs");
+		opt_subdirs.setOpaque(false);
 
         jLabel7.setHorizontalAlignment(SwingConstants.RIGHT);
         jLabel7.setText("Min page width");
@@ -802,6 +870,7 @@ public class MainWindow extends JFrame {
                             .addComponent(opt_edgePadding_chk)
                             .addComponent(opt_fast_chk)
                             .addComponent(opt_rotation_chk)
+                            .addComponent(opt_subdirs)
                             .addComponent(opt_stripWhitespaceY_chk)
                             .addComponent(opt_stripWhitespaceX_chk))
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -818,6 +887,7 @@ public class MainWindow extends JFrame {
                             .addGroup(GroupLayout.Alignment.TRAILING, jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addComponent(opt_ignoreBlankImages_chk)
                                 .addComponent(opt_debug_chk)
+                                .addComponent(opt_use_indices)
                                 .addComponent(opt_pot_chk)
                                 .addComponent(opt_alias_chk))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -863,9 +933,9 @@ public class MainWindow extends JFrame {
 
         jPanel3Layout.linkSize(SwingConstants.HORIZONTAL, opt_format_cbox, opt_maxPageHeight_nud, opt_maxPageWidth_nud, opt_minPageHeight_nud, opt_minPageWidth_nud, opt_outputFormat_cbox);
 
-        jPanel3Layout.linkSize(SwingConstants.HORIZONTAL, opt_duplicatePadding_chk, opt_edgePadding_chk, opt_fast_chk, opt_rotation_chk, opt_stripWhitespaceY_chk);
+        jPanel3Layout.linkSize(SwingConstants.HORIZONTAL, opt_duplicatePadding_chk, opt_edgePadding_chk, opt_fast_chk, opt_rotation_chk, opt_stripWhitespaceY_chk, opt_subdirs);
 
-        jPanel3Layout.linkSize(SwingConstants.HORIZONTAL, opt_alias_chk, opt_debug_chk, opt_ignoreBlankImages_chk, opt_pot_chk);
+        jPanel3Layout.linkSize(SwingConstants.HORIZONTAL, opt_alias_chk, opt_debug_chk, opt_use_indices, opt_ignoreBlankImages_chk, opt_pot_chk);
 
         jPanel3Layout.linkSize(SwingConstants.HORIZONTAL, jLabel10, jLabel16, jLabel17, jLabel18, jLabel19, jLabel2, jLabel20, jLabel3, jLabel4, jLabel5, jLabel6, jLabel7, jLabel8, jLabel9);
 
@@ -941,7 +1011,9 @@ public class MainWindow extends JFrame {
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(opt_stripWhitespaceY_chk)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(opt_rotation_chk))
+                        .addComponent(opt_rotation_chk)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(opt_subdirs))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel18)
@@ -956,7 +1028,9 @@ public class MainWindow extends JFrame {
                                 .addGap(46, 46, 46)
                                 .addComponent(opt_ignoreBlankImages_chk, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(opt_debug_chk))
+                                .addComponent(opt_debug_chk)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(opt_use_indices))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(opt_pot_chk)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -1025,6 +1099,7 @@ public class MainWindow extends JFrame {
     private JPanel centerPanel;
     private JLabel commentLabel;
     private JPanel configPanel;
+	private JButton copyPackBtn;
     private JButton copySettingsBtn;
     private JButton deletePackBtn;
     private JTextField filenameField;
@@ -1066,22 +1141,24 @@ public class MainWindow extends JFrame {
     private JCheckBox opt_edgePadding_chk;
     private JCheckBox opt_fast_chk;
     private JComboBox opt_filterMag_cbox;
-    private JComboBox opt_filterMin_cbox;
-    private JComboBox opt_format_cbox;
-    private JCheckBox opt_ignoreBlankImages_chk;
-    private JSpinner opt_jpegQuality_nud;
-    private JSpinner opt_maxPageHeight_nud;
-    private JSpinner opt_maxPageWidth_nud;
-    private JSpinner opt_minPageHeight_nud;
-    private JSpinner opt_minPageWidth_nud;
-    private JComboBox opt_outputFormat_cbox;
-    private JSpinner opt_paddingX_nud;
-    private JSpinner opt_paddingY_nud;
-    private JCheckBox opt_pot_chk;
-    private JCheckBox opt_rotation_chk;
-    private JCheckBox opt_stripWhitespaceX_chk;
-    private JCheckBox opt_stripWhitespaceY_chk;
-    private JComboBox opt_wrapX_cbox;
+	private JComboBox opt_filterMin_cbox;
+	private JComboBox opt_format_cbox;
+	private JCheckBox opt_ignoreBlankImages_chk;
+	private JSpinner opt_jpegQuality_nud;
+	private JSpinner opt_maxPageHeight_nud;
+	private JSpinner opt_maxPageWidth_nud;
+	private JSpinner opt_minPageHeight_nud;
+	private JSpinner opt_minPageWidth_nud;
+	private JComboBox opt_outputFormat_cbox;
+	private JSpinner opt_paddingX_nud;
+	private JSpinner opt_paddingY_nud;
+	private JCheckBox opt_pot_chk;
+	private JCheckBox opt_rotation_chk;
+	private JCheckBox opt_use_indices;
+	private JCheckBox opt_stripWhitespaceX_chk;
+	private JCheckBox opt_stripWhitespaceY_chk;
+	private JCheckBox opt_subdirs;
+	private JComboBox opt_wrapX_cbox;
     private JComboBox opt_wrapY_cbox;
     private JTextField outputField;
     private JButton packAllBtn;
