@@ -603,7 +603,7 @@ public class MainWindow extends JFrame {
         packsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(packsList);
 
-        commentLabel.setText("Leave blank for \"<packname>.pack\"");
+        commentLabel.setText("Leave blank for \"<packname>.atlas\"");
 
         GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);

@@ -32,7 +32,7 @@ public class Pack extends ChangeableObject {
 
 	public String getName() {return name.equals("") ? "unamed" : name;}
 	public String getRawFilename() {return filename;}
-	public String getFilename() {return filename.equals("") ? getName() + ".pack" : filename;}
+	public String getFilename() {return filename.equals("") ? getName() + ".atlas" : filename;}
 	public String getInput() {return input;}
 	public String getOutput() {return output;}
 	public Settings getSettings() {return settings;}
