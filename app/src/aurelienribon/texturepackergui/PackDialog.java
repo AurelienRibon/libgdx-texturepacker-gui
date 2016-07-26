@@ -2,6 +2,7 @@ package aurelienribon.texturepackergui;
 
 import aurelienribon.ui.components.PaintedPanel;
 import aurelienribon.ui.css.Style;
+import aurelienribon.utils.notifications.CommonUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import org.apache.commons.io.IOUtils;
@@ -68,7 +69,8 @@ public class PackDialog extends JDialog {
 					TexturePacker.process(pack.getSettings(), pack.getInput(), pack.getOutput(), pack.getFilename());
 					System.out.println("Done!");
 				} catch (RuntimeException ex) {
-					System.err.println("[error] Exception occured: " + ex.getMessage());
+					String message = CommonUtils.fetchMessageStack(ex);
+					System.err.println("[error] Exception occured: " + message);
 				}
 			}
 
