@@ -61,8 +61,12 @@ public class Pack extends ChangeableObject {
 		}
 
 		try {
-			if (!input.equals("")) input = new File(baseDir, input).getCanonicalPath();
-			if (!output.equals("")) output = new File(baseDir, output).getCanonicalPath();
+			if (!input.equals("") && !new File(input).isAbsolute()) {
+				input = new File(baseDir, input).getCanonicalPath();
+			}
+			if (!output.equals("") && !new File(output).isAbsolute()) {
+				output = new File(baseDir, output).getCanonicalPath();
+			}
 		} catch (IOException ex) {
 			System.err.println(ex.getMessage());
 			input = output = null;
