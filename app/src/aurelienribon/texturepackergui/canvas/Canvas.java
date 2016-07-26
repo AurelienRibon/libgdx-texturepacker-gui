@@ -376,7 +376,7 @@ public class Canvas extends ApplicationAdapter {
 	}
 
 	private void showNextPage() {
-		if (atlas == null) return;
+		if (atlas == null || sprites.size() == 0) return;
 
 		index = index+1 >= sprites.size() ? 0 : index+1;
 
@@ -385,7 +385,7 @@ public class Canvas extends ApplicationAdapter {
 	}
 
 	private void showPrevPage() {
-		if (atlas == null) return;
+		if (atlas == null || sprites.size() == 0) return;
 
 		index = index-1 < 0 ? sprites.size()-1 : index-1;
 
