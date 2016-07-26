@@ -119,6 +119,7 @@ public class PagePreview extends Widget {
         if (!pageMoved) {
             fitPageAtCenter();
         }
+        fixPagePosition();
     }
 
     public void setPage(Texture pageTexture) {
