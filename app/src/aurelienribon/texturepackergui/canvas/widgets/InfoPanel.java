@@ -1,7 +1,6 @@
 package aurelienribon.texturepackergui.canvas.widgets;
 
 import aurelienribon.texturepackergui.canvas.Assets;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -9,11 +8,10 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 
 public class InfoPanel extends WidgetGroup {
-    public static final float WIDTH = 140f;
-    public static final float HEIGHT = 80f;
+    public static final float WIDTH = 112f;
+    public static final float HEIGHT = 60f;
     private final Label lblCurrentPage;
     private final Label lblZoom;
-    private final Label lblFps;
 
     private int pagesAmount, currentPage;
 
@@ -41,11 +39,9 @@ public class InfoPanel extends WidgetGroup {
             Label.LabelStyle labelStyle = new Label.LabelStyle(assets.getFont(), Color.WHITE);
             lblCurrentPage = new Label("", labelStyle);
             lblZoom = new Label("", labelStyle);
-            lblFps = new Label("", labelStyle);
 
             verticalGroup.addActor(lblCurrentPage);
             verticalGroup.addActor(lblZoom);
-            verticalGroup.addActor(lblFps);
 
             Container container = new Container<>(verticalGroup);
             container.setFillParent(true);
@@ -58,13 +54,13 @@ public class InfoPanel extends WidgetGroup {
         setZoomLevel(100f);
     }
 
-    @Override
-    public void act(float delta) {
-        super.act(delta);
-
-        int fps = Gdx.graphics.getFramesPerSecond();
-        lblFps.setText("FPS: " + fps);
-    }
+//    @Override
+//    public void act(float delta) {
+//        super.act(delta);
+//
+//        int fps = Gdx.graphics.getFramesPerSecond();
+//        lblFps.setText("FPS: " + fps);
+//    }
 
     @Override
     public float getPrefWidth() { return WIDTH; }
