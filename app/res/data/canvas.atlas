@@ -1,0 +1,41 @@
+
+canvas.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+title
+  rotate: false
+  xy: 1, 41
+  size: 199, 20
+  orig: 199, 20
+  offset: 0, 0
+  index: -1
+gdxlogo
+  rotate: false
+  xy: 1, 19
+  size: 84, 20
+  orig: 84, 20
+  offset: 0, 0
+  index: -1
+texture
+  rotate: false
+  xy: 202, 11
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+white
+  rotate: false
+  xy: 1, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+page_frame
+  rotate: false
+  xy: 87, 36
+  size: 3, 3
+  split: 1, 1, 1, 1
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
