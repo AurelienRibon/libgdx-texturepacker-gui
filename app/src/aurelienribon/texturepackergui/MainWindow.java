@@ -150,13 +150,11 @@ public class MainWindow extends JFrame {
 
 			if (pack != null) {
 				loadPack(pack);
-//				canvas.reloadPack(pack.getOutput() + "/" + pack.getFilename());
 				reloadPackInCanvas(pack.getOutput() + "/" + pack.getFilename());
 			} else {
 				inputField.setText("");
 				outputField.setText("");
 				filenameField.setText("");
-//				canvas.reloadPack(null);
 				reloadPackInCanvas(null);
 			}
 		}
@@ -320,7 +318,6 @@ public class MainWindow extends JFrame {
 		dialog.setLocationRelativeTo(this);
 		dialog.setVisible(true);
 
-//		canvas.reloadPack(pack.getOutput() + "/" + pack.getFilename());
 		reloadPackInCanvas(pack.getOutput() + "/" + pack.getFilename());
 	}
 
