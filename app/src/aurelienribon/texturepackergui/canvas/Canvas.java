@@ -4,7 +4,7 @@ import aurelienribon.texturepackergui.canvas.widgets.CanvasBackgroundWidget;
 import aurelienribon.texturepackergui.canvas.widgets.InfoPanel;
 import aurelienribon.texturepackergui.canvas.widgets.PageChangeButton;
 import aurelienribon.texturepackergui.canvas.widgets.SplashWidget;
-import aurelienribon.texturepackergui.canvas.widgets.preview.PreviewGroup;
+import aurelienribon.texturepackergui.canvas.widgets.preview.PreviewHolder;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -20,11 +20,11 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class Canvas extends ApplicationAdapter {
 
-	private Callback callback;
 	private Assets assets;
 	private Stage stage;
+	private Callback callback;
 
-	private PreviewGroup previewGroup;
+	private PreviewHolder previewHolder;
 	private InfoPanel infoPanel;
 
 	private AtlasModel atlas;
@@ -36,7 +36,6 @@ public class Canvas extends ApplicationAdapter {
 		assets.loadAll();
 
 		stage = new Stage(new ScreenViewport());
-
 		Gdx.input.setInputProcessor(stage);
 
 		// Stage layout
@@ -49,15 +48,15 @@ public class Canvas extends ApplicationAdapter {
 
 			// Page preview
 			{
-				previewGroup = new PreviewGroup(assets);
-				previewGroup.setListener(new PreviewGroup.Listener() {
+				previewHolder = new PreviewHolder(assets);
+				previewHolder.setListener(new PreviewHolder.Listener() {
 					@Override
 					public void onZoomChanged(int percentage) {
 						infoPanel.setZoomLevel(percentage);
 					}
 				});
 
-				stage.addActor(previewGroup);
+				stage.addActor(previewHolder);
 			}
 
 			// Page buttons
@@ -139,7 +138,7 @@ public class Canvas extends ApplicationAdapter {
 
 	public void reloadPack(String packPath) {
 		pageIndex = 0;
-		previewGroup.reset();
+		previewHolder.reset();
 		infoPanel.setPagesAmount(0);
 		if (atlas != null) {
 			atlas.dispose();
@@ -152,7 +151,7 @@ public class Canvas extends ApplicationAdapter {
 				try {
 					atlas = new AtlasModel(packFile);
 
-					previewGroup.setPage(atlas, pageIndex);
+					previewHolder.setPage(atlas, pageIndex);
 					infoPanel.setCurrentPage(pageIndex +1);
 					infoPanel.setPagesAmount(atlas.getPages().size);
 
@@ -174,7 +173,7 @@ public class Canvas extends ApplicationAdapter {
 
 		pageIndex = pageIndex +1 >= atlas.getPages().size ? 0 : pageIndex+1;
 
-		previewGroup.setPage(atlas, pageIndex);
+		previewHolder.setPage(atlas, pageIndex);
 		infoPanel.setCurrentPage(pageIndex +1);
 	}
 
@@ -183,7 +182,7 @@ public class Canvas extends ApplicationAdapter {
 
 		pageIndex = pageIndex -1 < 0 ? atlas.getPages().size-1 : pageIndex-1;
 
-		previewGroup.setPage(atlas, pageIndex);
+		previewHolder.setPage(atlas, pageIndex);
 		infoPanel.setCurrentPage(pageIndex +1);
 	}
 

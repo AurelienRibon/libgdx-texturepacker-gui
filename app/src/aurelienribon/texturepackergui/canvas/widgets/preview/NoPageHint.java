@@ -10,12 +10,12 @@ import com.badlogic.gdx.utils.Align;
 
 class NoPageHint extends Container<Label> {
     public NoPageHint(Assets assets) {
-        Label lblMessage = new Label("[#aaaaaaff]pack atlas to see pages", new Label.LabelStyle(assets.getFont(), new Color(0xaaaaaaff)));
+        Label lblMessage = new Label("[#ffffffaa]PACK ATLAS TO SEE PAGES", new Label.LabelStyle(assets.getFont(), new Color(0xffffffff)));
         setActor(lblMessage);
 
         setFillParent(true);
         align(Align.center);
         setTouchable(Touchable.disabled);
-        setBackground(new TextureRegionDrawable(assets.getWhiteTex()).tint(new Color(0x000000c0)), false);
+        setBackground(new TextureRegionDrawable(assets.getWhiteTex()).tint(new Color(0x00000040)), false);
     }
 }
