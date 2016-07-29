@@ -1,14 +1,14 @@
 package aurelienribon.texturepackergui.canvas;
 
-import aurelienribon.texturepackergui.canvas.widgets.*;
+import aurelienribon.texturepackergui.canvas.widgets.CanvasBackgroundWidget;
+import aurelienribon.texturepackergui.canvas.widgets.InfoPanel;
+import aurelienribon.texturepackergui.canvas.widgets.PageChangeButton;
+import aurelienribon.texturepackergui.canvas.widgets.SplashWidget;
+import aurelienribon.texturepackergui.canvas.widgets.preview.PreviewGroup;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
@@ -18,22 +18,17 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Canvas extends ApplicationAdapter {
 
-	private final List<Sprite> sprites = new ArrayList<Sprite>();
 	private Callback callback;
 	private Assets assets;
-
-	private TextureAtlas atlas;
-	private int index = 0;
-
 	private Stage stage;
 
-	private PagePreview pagePreview;
+	private PreviewGroup previewGroup;
 	private InfoPanel infoPanel;
+
+	private AtlasModel atlas;
+	private int pageIndex = 0;
 
 	@Override
 	public void create() {
@@ -54,15 +49,15 @@ public class Canvas extends ApplicationAdapter {
 
 			// Page preview
 			{
-				pagePreview = new PagePreview(assets);
-				pagePreview.setListener(new PagePreview.Listener() {
+				previewGroup = new PreviewGroup(assets);
+				previewGroup.setListener(new PreviewGroup.Listener() {
 					@Override
 					public void onZoomChanged(int percentage) {
 						infoPanel.setZoomLevel(percentage);
 					}
 				});
 
-				stage.addActor(pagePreview);
+				stage.addActor(previewGroup);
 			}
 
 			// Page buttons
@@ -135,45 +130,35 @@ public class Canvas extends ApplicationAdapter {
 	@Override
 	public void dispose() {
 		super.dispose();
-		if (atlas != null) atlas.dispose();
 		stage.dispose();
 		assets.dispose();
+		if (atlas != null) {
+			atlas.dispose();
+		}
 	}
 
 	public void reloadPack(String packPath) {
-		index = 0;
-		sprites.clear();
-		pagePreview.reset();
+		pageIndex = 0;
+		previewGroup.reset();
 		infoPanel.setPagesAmount(0);
-		if (atlas != null) atlas.dispose();
+		if (atlas != null) {
+			atlas.dispose();
+			atlas = null;
+		}
 
 		if (packPath != null) {
 			FileHandle packFile = Gdx.files.absolute(packPath);
 			if (packFile != null && packFile.exists()) {
 				try {
-					atlas = new TextureAtlas(packFile);
-					List<Texture> textures = new ArrayList<>();
+					atlas = new AtlasModel(packFile);
 
-					// We could use simple atlas.getTextures(), but it returns them in random order...
-					for (TextureRegion region : atlas.getRegions()) {
-						if (!textures.contains(region.getTexture()))
-							textures.add(region.getTexture());
-					}
-
-					for (Texture tex : textures) {
-						Sprite sp = new Sprite(tex);
-						sp.setOrigin(sp.getWidth() / 2, sp.getHeight() / 2);
-						sp.setPosition(-sp.getOriginX(), -sp.getOriginY());
-						sprites.add(sp);
-					}
-
-					pagePreview.setPage(sprites.get(index).getTexture());
-					infoPanel.setCurrentPage(index+1);
-					infoPanel.setPagesAmount(sprites.size());
+					previewGroup.setPage(atlas, pageIndex);
+					infoPanel.setCurrentPage(pageIndex +1);
+					infoPanel.setPagesAmount(atlas.getPages().size);
 
 				} catch (GdxRuntimeException ex) {
+					atlas.dispose();
 					atlas = null;
-					sprites.clear();
 					callback.atlasError();
 				}
 			}
@@ -185,21 +170,21 @@ public class Canvas extends ApplicationAdapter {
 	}
 
 	private void showNextPage() {
-		if (atlas == null || sprites.size() == 0) return;
+		if (atlas == null || atlas.getPages().size == 0) return;
 
-		index = index+1 >= sprites.size() ? 0 : index+1;
+		pageIndex = pageIndex +1 >= atlas.getPages().size ? 0 : pageIndex+1;
 
-		pagePreview.setPage(sprites.get(index).getTexture());
-		infoPanel.setCurrentPage(index+1);
+		previewGroup.setPage(atlas, pageIndex);
+		infoPanel.setCurrentPage(pageIndex +1);
 	}
 
 	private void showPrevPage() {
-		if (atlas == null || sprites.size() == 0) return;
+		if (atlas == null || atlas.getPages().size == 0) return;
 
-		index = index-1 < 0 ? sprites.size()-1 : index-1;
+		pageIndex = pageIndex -1 < 0 ? atlas.getPages().size-1 : pageIndex-1;
 
-		pagePreview.setPage(sprites.get(index).getTexture());
-		infoPanel.setCurrentPage(index+1);
+		previewGroup.setPage(atlas, pageIndex);
+		infoPanel.setCurrentPage(pageIndex +1);
 	}
 
 	public interface Callback {
